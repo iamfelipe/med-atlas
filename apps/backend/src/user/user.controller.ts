@@ -42,7 +42,7 @@ export class UserController {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       }
-      throw new BadRequestException(error.message);
+      throw new BadRequestException(error.message as string);
     }
   }
 
@@ -54,7 +54,7 @@ export class UserController {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       }
-      throw new BadRequestException(error.message);
+      throw new BadRequestException(error.message as string);
     }
   }
 
@@ -66,7 +66,7 @@ export class UserController {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       }
-      throw new BadRequestException(error.message);
+      throw new BadRequestException(error.message as string);
     }
   }
 }
