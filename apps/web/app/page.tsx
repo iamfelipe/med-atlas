@@ -1,5 +1,6 @@
-import Image, { type ImageProps } from "next/image";
+import { User } from "@repo/types";
 import { Button } from "@repo/ui/button";
+import Image, { type ImageProps } from "next/image";
 import styles from "./page.module.css";
 
 type Props = Omit<ImageProps, "src"> & {
@@ -19,6 +20,13 @@ const ThemeImage = (props: Props) => {
 };
 
 export default function Home() {
+  const user: User = {
+    id: "1",
+    name: "John Doe",
+    email: "john.doe@example.com",
+    password: "password",
+  };
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -32,9 +40,7 @@ export default function Home() {
           priority
         />
         <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
+          <li>{JSON.stringify(user, null, 2)}</li>
           <li>Save and see your changes instantly.</li>
         </ol>
 
