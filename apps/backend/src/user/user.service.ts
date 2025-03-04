@@ -1,46 +1,81 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaClient, User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  create(createUserDto: CreateUserDto) {
-    return {
-      id: '1',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      password: 'password',
-    };
+  private prisma = new PrismaClient();
+
+  async createUser(data: {
+    name: string;
+    email: string;
+    password: string;
+  }): Promise<User> {
+    if (!data.name || !data.email || !data.password) {
+      throw new ConflictException('Name, email, and password are required');
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (user) {
+      throw new ConflictException('User with this email already exists');
+    }
+
+    return this.prisma.user.create({
+      data,
+    });
   }
 
-  findAll() {
-    return [
-      {
-        id: '1',
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        password: 'password',
-      },
-      {
-        id: '2',
-        name: 'Jane Doe',
-        email: 'jane.doe@example.com',
-        password: 'password',
-      },
-    ];
+  async getAllUsers(): Promise<User[]> {
+    return this.prisma.user.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async getUserById(id: number): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return user;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async updateUser(
+    id: number,
+    data: { name?: string; email?: string; password?: string },
+  ): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async deleteUser(id: number): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return this.prisma.user.delete({
+      where: { id },
+    });
   }
 }
