@@ -37,6 +37,14 @@ export class UserController {
       throw new BadRequestException(error.message);
     }
   }
+  @Get('patient')
+  async findAllPatients() {
+    try {
+      return this.userService.getAllPatients();
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {

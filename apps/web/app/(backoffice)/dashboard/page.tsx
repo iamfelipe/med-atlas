@@ -13,6 +13,7 @@ export default async function Dashboard() {
             <p>
               {user.firstName} {user.lastName}
             </p>
+            <p>{user.role}</p>
             <span>{user.email}</span>
           </li>
         ))}

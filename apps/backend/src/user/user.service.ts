@@ -10,10 +10,6 @@ export class UserService {
   private prisma = new PrismaClient();
 
   async createUser(user: User): Promise<User> {
-    if (!user.firstName || !user.email || !user.email) {
-      throw new ConflictException('Name, email, and password are required');
-    }
-
     const dbUser = await this.prisma.user.findUnique({
       where: { id: user.id },
     });
@@ -23,17 +19,18 @@ export class UserService {
     }
 
     return this.prisma.user.create({
-      data: {
-        id: user.id,
-        firstName: user.firstName ?? '',
-        lastName: user.lastName ?? '',
-        email: user.email ?? '',
-      },
+      data: user,
     });
   }
 
   async getAllUsers(): Promise<User[]> {
     return this.prisma.user.findMany();
+  }
+
+  async getAllPatients(): Promise<User[]> {
+    return this.prisma.user.findMany({
+      where: { role: 'patient' },
+    });
   }
 
   async getUserById(id: string): Promise<User | null> {
