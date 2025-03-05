@@ -31,7 +31,7 @@ model EHR {
   name        String     @unique // Ej: Athena, Allscripts, Cerner
   baseUrl     String
   authType    String     // Ej: OAuth2, API_KEY
-  mappings    EHRMapping[]
+  mappings    EHRMapping[] // Ej: Patient, Appointment, etc.
   users       User[]     @relation("UserEHR")
 }
 
@@ -43,6 +43,6 @@ model EHRMapping {
   fieldName   String   // Ej: p_name, PATIENT_IDENT_NAME
   mappingPath String   // Ej: patient.name, $.patient.p_name
   dataType    String   // Ej: string, date
-  required    Boolean  @default(false)
+  required    Boolean?  @default(true)
   apiEndpoint String?  // Ej: /api/patient, /api/appointment
 }
