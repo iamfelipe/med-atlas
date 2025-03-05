@@ -30,6 +30,9 @@ export class UserService {
   async getAllPatients(): Promise<User[]> {
     return this.prisma.user.findMany({
       where: { role: 'patient' },
+      include: {
+        ehr: true,
+      },
     });
   }
 
