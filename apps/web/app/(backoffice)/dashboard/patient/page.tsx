@@ -1,3 +1,5 @@
+import { columns } from "@/components/table-patients/patients.columns";
+import { DataTable } from "@/components/table-patients/patients.data-table";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getPatients } from "@/server/user";
@@ -19,19 +21,7 @@ export default async function Patient() {
           <TabsTrigger value="Pending">Pending</TabsTrigger>
         </TabsList>
         <TabsContent value="all">
-          <ol>
-            {patients.map((patient) => (
-              <li key={patient.id} className="flex gap-4 items-center">
-                <p>{patient.firstName}</p>
-                <p>{patient.lastName}</p>
-                <p>{patient.email}</p>
-                <p>{patient.ehrId}</p>
-                <Button size="sm" variant="ghost">
-                  Add EHR
-                </Button>
-              </li>
-            ))}
-          </ol>
+          <DataTable columns={columns} data={patients} />
         </TabsContent>
         <TabsContent value="Pending">
           <p>Pending</p>
