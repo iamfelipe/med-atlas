@@ -1,4 +1,3 @@
-import { User } from "@repo/types";
 import { getUsers } from "../server/users";
 import styles from "./page.module.css";
 
@@ -8,7 +7,7 @@ import styles from "./page.module.css";
 // };
 
 export default async function Home() {
-  const users: User[] = await getUsers();
+  const users = await getUsers();
 
   return (
     <div className={styles.page}>
