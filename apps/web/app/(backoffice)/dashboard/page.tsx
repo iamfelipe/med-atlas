@@ -1,11 +1,12 @@
-import { getUsers } from "../../server/users";
+import { getUsers } from "@/server/users";
 
 export default async function Dashboard() {
   const users = await getUsers();
 
   return (
     <>
-      <h1>Dashboard</h1>
+      <h1>General dashboard</h1>
+
       <ul>
         {users.map((user) => (
           <li key={user.id}>
