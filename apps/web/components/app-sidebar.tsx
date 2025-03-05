@@ -5,6 +5,7 @@ import {
   Bot,
   Command,
   GalleryVerticalEnd,
+  Home,
   SquareTerminal,
 } from "lucide-react";
 import type * as React from "react";
@@ -45,6 +46,12 @@ const data = {
     },
   ],
   navMain: [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: Home,
+      isActive: true,
+    },
     {
       title: "Patients",
       url: "#",

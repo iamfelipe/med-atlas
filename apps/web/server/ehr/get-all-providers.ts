@@ -1,6 +1,6 @@
-import { EHR } from "@prisma/client";
+import { EHRWithMappings } from "@repo/types";
 
-export const getEhrList = async (): Promise<EHR[]> => {
+export const getAllEhr = async (): Promise<EHRWithMappings[]> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/ehr`);
   const ehrList = await response.json();
   return ehrList;

@@ -2,10 +2,10 @@ import { columns } from "@/components/table-patients/patients.columns";
 import { DataTable } from "@/components/table-patients/patients.data-table";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getPatients } from "@/server/user";
+import { getAllPatients } from "@/server/user";
 
 export default async function Patient() {
-  const patients = await getPatients();
+  const patients = await getAllPatients();
 
   return (
     <>

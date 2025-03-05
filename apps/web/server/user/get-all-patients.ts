@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 
-export const getPatients = async (): Promise<User[]> => {
+export const getAllPatients = async (): Promise<User[]> => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER}/user/patient`
   );

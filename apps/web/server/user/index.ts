@@ -1,2 +1,2 @@
 export * from "./create-user";
-export * from "./get-patients";
+export * from "./get-all-patients";
