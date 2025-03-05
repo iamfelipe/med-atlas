@@ -92,9 +92,10 @@ Integrating patient data across multiple EHR systems is challenging due to the d
 
 ## 7. User Roles & Permissions
 
+- **Client**: Handle patient data, selects EHRs to submit to.
+- **Patient**: Fill out patient data
+- **Doctor**: Read patient data
 - **Admin**: Manage EHR mappings, view logs, configure settings.
-- **Clinician**: Submit patient data, view submission history.
-- **Support Staff**: Read-only access to mappings and logs.
 
 ## 8. Performance & Scalability
 

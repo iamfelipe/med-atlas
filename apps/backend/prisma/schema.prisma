@@ -14,8 +14,104 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
+  id        String      @id @unique
   email     String   @unique
-  password  String
+  firstName String
+  lastName  String
 }
+
+// model Account {
+//   id String @id @default(uuid())
+//   userId String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   provider String
+//   providerAccountId String
+//   refreshToken String?
+//   accessToken String?
+//   expiresAt DateTime?
+//   tokenType String?
+//   scope String?
+//   idToken String?
+//   sessionState String?
+
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
+
+// model Session {
+//   id String @id @default(uuid())
+//   userId String
+//   expires DateTime
+//   sessionToken String @unique
+
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
+
+// enum Role {
+//   ADMIN
+//   USER
+// }
+
+// model User {
+//   id          String   @id @default(uuid())
+//   name        String
+//   roles       Role @default(USER)
+//   accounts Account[]
+//   sessions Session[]
+//   @@map("users") // Map the table to the users table
+// }
+
+
+// // Patient model representing patients in the system
+// model Patient {
+//   id             String           @id @default(uuid())
+//   medicalHistory MedicalHistory?  @relation("PatientMedicalHistory")
+//   doctors        DoctorPatient[]   // Many-to-many relationship with Doctor
+// }
+
+// // Doctor model representing doctors in the system
+// model Doctor {
+//   id             String           @id @default(uuid())
+//   name           String
+//   gender         String
+//   specialization String
+//   clientId       String?
+//   client         Client?          @relation("ClientDoctors", fields: [clientId], references: [id]) // Relación uno a uno con Client
+//   patients       DoctorPatient[]   // Many-to-many relationship with Patient
+// }
+
+// // Join table for many-to-many relationship between Patient and Doctor
+// model DoctorPatient {
+//   id        String   @id @default(uuid())
+//   patient   Patient  @relation(fields: [patientId], references: [id])
+//   patientId String
+//   doctor    Doctor   @relation(fields: [doctorId], references: [id])
+//   doctorId  String
+// }
+
+// // Client model representing clients in the system
+// model Client {
+//   id              String       @id @default(uuid())
+//   name            String
+//   contactDetails  String
+//   doctors         Doctor[]     @relation("ClientDoctors")
+// }
+
+// // MedicalHistory model representing a patient's medical history
+// model MedicalHistory {
+//   id        String   @id @default(uuid())
+//   patientId String   @unique
+//   patient   Patient  @relation("PatientMedicalHistory", fields: [patientId], references: [id], onDelete: Cascade)
+//   name      String
+//   address   String
+//   phone     String
+//   provider  Provider  @relation(fields: [providerId], references: [id]) // Reference to dynamic provider
+//   providerId String
+// }
+
+// // Dynamic Provider model
+// model Provider {
+//   id        String   @id @default(uuid())
+//   name      String   @unique // Unique name for each provider
+//   medicalHistories MedicalHistory[] // Relation to MedicalHistory
+// }

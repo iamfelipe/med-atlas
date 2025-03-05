@@ -11,8 +11,9 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/ui": "*",
+    "@kinde-oss/kinde-auth-nextjs": "^2.5.3",
     "@repo/types": "*",
+    "@repo/ui": "*",
     "next": "^15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

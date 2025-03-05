@@ -9,25 +9,26 @@ import { PrismaClient, User } from '@prisma/client';
 export class UserService {
   private prisma = new PrismaClient();
 
-  async createUser(data: {
-    name: string;
-    email: string;
-    password: string;
-  }): Promise<User> {
-    if (!data.name || !data.email || !data.password) {
+  async createUser(user: User): Promise<User> {
+    if (!user.firstName || !user.email || !user.email) {
       throw new ConflictException('Name, email, and password are required');
     }
 
-    const user = await this.prisma.user.findUnique({
-      where: { email: data.email },
+    const dbUser = await this.prisma.user.findUnique({
+      where: { id: user.id },
     });
 
-    if (user) {
-      throw new ConflictException('User with this email already exists');
+    if (dbUser) {
+      throw new ConflictException('User already exists');
     }
 
     return this.prisma.user.create({
-      data,
+      data: {
+        id: user.id,
+        firstName: user.firstName ?? '',
+        lastName: user.lastName ?? '',
+        email: user.email ?? '',
+      },
     });
   }
 
@@ -35,7 +36,7 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  async getUserById(id: number): Promise<User | null> {
+  async getUserById(id: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },
     });
@@ -48,7 +49,7 @@ export class UserService {
   }
 
   async updateUser(
-    id: number,
+    id: string,
     data: { name?: string; email?: string; password?: string },
   ): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
@@ -65,7 +66,7 @@ export class UserService {
     });
   }
 
-  async deleteUser(id: number): Promise<User | null> {
+  async deleteUser(id: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },
     });

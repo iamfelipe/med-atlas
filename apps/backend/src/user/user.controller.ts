@@ -1,3 +1,4 @@
+import { KindeIsAuth } from '@amsame/kinde-auth-nestjs';
 import {
   BadRequestException,
   Body,
@@ -30,6 +31,7 @@ export class UserController {
   }
 
   @Get()
+  @KindeIsAuth()
   async findAll() {
     return this.userService.getAllUsers();
   }
@@ -37,7 +39,7 @@ export class UserController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
-      return this.userService.getUserById(+id);
+      return this.userService.getUserById(id);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
@@ -49,7 +51,7 @@ export class UserController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     try {
-      return this.userService.deleteUser(+id);
+      return this.userService.deleteUser(id);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
@@ -61,7 +63,7 @@ export class UserController {
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: User) {
     try {
-      return this.userService.updateUser(+id, updateUserDto);
+      return this.userService.updateUser(id, updateUserDto);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);

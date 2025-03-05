@@ -148,8 +148,11 @@ The project will be assessed on:
       "allergies": "ALLERGIES_PATIENT",
       "currentMedications": "PATIENT_MEDICATIONS_CURRENT",
       "medicalHistory": "HISTORY_MEDICAL_PATIENT",
+      // This is usually previously diagnosed medical issues such as abdominal pain, shortness of breath, chest pain, injuries, past surgeries, etc.
       "socialHistory": "HISTORY_SOCIAL_PATIENT",
+      // These are familial, occupational, and recreational aspects of the patient's life that can have the potential to be clinically significant. Think of alcohol, tobacco, drugs, diet, travel, etc.
       "familyHistory": "HISTORY_FAMILY_PATIENT"
+      // This can be things like history of high blood pressure, cancer, stroke, diabet
     }
   }
 }

@@ -1,5 +1,9 @@
-import { getUsers } from "../server/users";
-import styles from "./page.module.css";
+import {
+  LoginLink,
+  LogoutLink,
+  RegisterLink,
+} from "@kinde-oss/kinde-auth-nextjs/components";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 // type Props = Omit<ImageProps, "src"> & {
 //   srcLight: string;
@@ -7,15 +11,26 @@ import styles from "./page.module.css";
 // };
 
 export default async function Home() {
-  const users = await getUsers();
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
 
   return (
-    <div className={styles.page}>
-      <ol>
-        {users.map((user) => (
-          <li key={user.id}>{user.name}</li>
-        ))}
-      </ol>
-    </div>
+    <>
+      <h1>Home</h1>
+      {user ? (
+        <>
+          <p>
+            {user.given_name} {user.family_name}
+          </p>
+          <LogoutLink>Logout</LogoutLink>
+        </>
+      ) : (
+        <>
+          <LoginLink>Sign in</LoginLink>
+
+          <RegisterLink>Sign up</RegisterLink>
+        </>
+      )}
+    </>
   );
 }
