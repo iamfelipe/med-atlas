@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   LoginLink,
   LogoutLink,
@@ -26,9 +27,13 @@ export default async function Home() {
         </>
       ) : (
         <>
-          <LoginLink>Sign in</LoginLink>
+          <Button asChild>
+            <LoginLink>Sign in</LoginLink>
+          </Button>
 
-          <RegisterLink>Sign up</RegisterLink>
+          <Button variant="secondary" asChild>
+            <RegisterLink>Sign up</RegisterLink>
+          </Button>
         </>
       )}
     </>
