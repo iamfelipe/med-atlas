@@ -1,5 +1,10 @@
 export interface KindeRole {
   id: string;
-  key: string;
+  key: RoleType;
   name: string;
+}
+
+export enum RoleType {
+  PATIENT = "patient",
+  ADMIN = "admin",
 }
