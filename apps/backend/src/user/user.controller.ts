@@ -1,4 +1,3 @@
-import { KindeIsAuth } from '@amsame/kinde-auth-nestjs';
 import {
   BadRequestException,
   Body,
@@ -31,9 +30,12 @@ export class UserController {
   }
 
   @Get()
-  @KindeIsAuth()
   async findAll() {
-    return this.userService.getAllUsers();
+    try {
+      return this.userService.getAllUsers();
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   @Get(':id')

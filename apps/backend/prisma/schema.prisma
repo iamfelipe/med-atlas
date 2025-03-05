@@ -18,34 +18,19 @@ model User {
   email     String   @unique
   firstName String
   lastName  String
+
+  medicalRecord MedicalRecord? @relation("UserMedicalRecord")
 }
 
-// model Account {
-//   id String @id @default(uuid())
-//   userId String
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   provider String
-//   providerAccountId String
-//   refreshToken String?
-//   accessToken String?
-//   expiresAt DateTime?
-//   tokenType String?
-//   scope String?
-//   idToken String?
-//   sessionState String?
+model MedicalRecord {
+  id String @id @default(uuid())
+  name String
+  mapping Json
 
-//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-// }
+  userId String @unique
+  user User @relation("UserMedicalRecord", fields: [userId], references: [id], onDelete: Cascade)
+}
 
-// model Session {
-//   id String @id @default(uuid())
-//   userId String
-//   expires DateTime
-//   sessionToken String @unique
-
-//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-// }
 
 // enum Role {
 //   ADMIN

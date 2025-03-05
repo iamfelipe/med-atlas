@@ -16,5 +16,6 @@ export async function GET() {
     email: user.email ?? "",
   });
 
+  // return NextResponse.json({ user });
   return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}`);
 }
