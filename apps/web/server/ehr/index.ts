@@ -1,1 +1,1 @@
-export * from "./get-all-providers";
+export * from "./get-all-ehr";

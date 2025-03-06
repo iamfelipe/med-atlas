@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getAllEhr } from "@/server/ehr";
+import Link from "next/link";
 
 export default async function Ehr() {
   const ehrList = await getAllEhr();
@@ -11,7 +12,9 @@ export default async function Ehr() {
           Electronic Health Records
         </h2>
         <div className="flex items-center space-x-2">
-          <Button>Add EHR</Button>
+          <Button asChild>
+            <Link href="/dashboard/ehr/create">Create EHR</Link>
+          </Button>
         </div>
       </div>
       <ol>

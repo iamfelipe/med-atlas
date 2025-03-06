@@ -9,6 +9,8 @@ import {
 } from '@nestjs/common';
 import { CreateEhrDto } from './dto/create-ehr.dto';
 import { UpdateEhrDto } from './dto/update-ehr.dto';
+
+import { EHRWithMappings } from '@repo/types';
 import { EhrService } from './ehr.service';
 
 @Controller('ehr')
@@ -21,7 +23,7 @@ export class EhrController {
   }
 
   @Get()
-  findAll() {
+  async getAllEhr(): Promise<EHRWithMappings[]> {
     return this.ehrService.findAllWithMappings();
   }
 

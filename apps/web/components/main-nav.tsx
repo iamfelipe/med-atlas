@@ -17,7 +17,7 @@ const NavLink = ({
       href={href}
       className={cn(
         "text-sm font-medium transition-colors hover:text-primary",
-        pathname === href ? "" : "text-muted-foreground" // Apply muted class if not active
+        pathname === href ? "pointer-events-none" : "text-muted-foreground" // Apply muted class if not active
       )}
     >
       {children}
