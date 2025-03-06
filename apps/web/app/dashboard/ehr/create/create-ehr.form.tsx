@@ -24,10 +24,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createEhr } from "@/server/ehr/create-ehr";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export const CreateEhrForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
-    mode: "onBlur",
+    mode: "all",
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -37,9 +41,21 @@ export const CreateEhrForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const response = await createEhr({
+      authType: values.authType,
+      baseUrl: values.baseUrl,
+      name: values.name,
+      mappings: values.mappings,
+    });
+
     form.reset();
+    if (response.statusCode === 201) {
+      toast.success(response.message);
+      router.push("/dashboard/ehr");
+    } else {
+      toast.error(response.message);
+    }
   }
 
   return (
@@ -99,7 +115,9 @@ export const CreateEhrForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Create</Button>
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? "Creating..." : "Create"}
+        </Button>
       </form>
     </Form>
   );

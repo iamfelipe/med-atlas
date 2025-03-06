@@ -3,7 +3,7 @@ import { getAllEhr } from "@/server/ehr";
 import Link from "next/link";
 
 export default async function Ehr() {
-  const ehrList = await getAllEhr();
+  const { data: ehrList } = await getAllEhr();
 
   return (
     <>

@@ -12,7 +12,7 @@ export const createEhrMappingDtoSchema = z.object({
 export const createEhrDtoSchema = z.object({
   name: z.string().min(2).max(30),
   baseUrl: z.string().url(),
-  authType: z.enum(["OAuth2", "API_KEY"]),
+  authType: z.enum(["OAuth2", "API_KEY"]).default("API_KEY"),
   mappings: z.array(createEhrMappingDtoSchema).optional(),
 });
 

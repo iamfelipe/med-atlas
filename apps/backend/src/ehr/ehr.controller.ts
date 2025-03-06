@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 
@@ -17,14 +18,18 @@ import {
   CreateEhrDto,
   createEhrDtoSchema,
 } from '@repo/api/links/dto/create-ehr.dto';
+import { ResponseMessage } from 'lib/response-message.decorator';
+import { TransformInterceptor } from 'lib/response.interceptor';
 import { ZodValidationPipe } from 'lib/zod-validation-pipe';
 import { EhrService } from './ehr.service';
 
 @Controller('ehr')
+@UseInterceptors(TransformInterceptor)
 export class EhrController {
   constructor(private readonly ehrService: EhrService) {}
 
   @Post()
+  @ResponseMessage('EHR Created Succesfully')
   @UsePipes(new ZodValidationPipe(createEhrDtoSchema))
   create(@Body() createEhrDto: CreateEhrDto) {
     return this.ehrService.create(createEhrDto);
