@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createEhrDtoSchema as formSchema } from "@repo/api/links/dto/create-ehr.dto";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -16,11 +17,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const formSchema = z.object({
-  name: z.string().min(2).max(50),
-  baseUrl: z.string().url(),
-  authType: z.enum(["OAuth2", "API_KEY"]),
-});
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const CreateEhrForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -28,12 +31,13 @@ export const CreateEhrForm = () => {
     defaultValues: {
       name: "",
       baseUrl: "",
-      authType: "OAuth2",
+      authType: "API_KEY",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    form.reset();
   }
 
   return (
@@ -49,6 +53,46 @@ export const CreateEhrForm = () => {
                 <Input placeholder="EHR Name" {...field} />
               </FormControl>
               <FormDescription>This is the name of the EHR.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="baseUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>URL</FormLabel>
+              <FormControl>
+                <Input placeholder="EHR Base URL" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is the base URL of the EHR.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="authType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Auth type</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="OAuth2">OAuth2</SelectItem>
+                  <SelectItem value="API_KEY">API_KEY</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                This is the authentication type of the EHR.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

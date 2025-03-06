@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { EHR, PrismaClient } from '@prisma/client';
-import { CreateEhrDto } from './dto/create-ehr.dto';
+// import { CreateEhrDto } from './dto/create-ehr.dto';
+import { CreateEhrDto } from '@repo/api/links/dto/create-ehr.dto';
 import { UpdateEhrDto } from './dto/update-ehr.dto';
 import { EHRWithMappings } from './entities/ehr.entity';
 @Injectable()

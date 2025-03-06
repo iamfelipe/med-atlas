@@ -6,5 +6,8 @@
   "types": "index.d.ts",
   "files": [
     "index.ts"
-  ]
+  ],
+  "dependencies": {
+    "zod": "^3.24.2"
+  }
 }
