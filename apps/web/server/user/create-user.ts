@@ -16,3 +16,25 @@ export const createUser = async (user: {
   const newUser = await response.json();
   return newUser;
 };
+
+// private async updateRoleInKinde(userId: string, role: string): Promise<void> {
+//   const { getAccessToken } = getKindeServerSession();
+
+//   const accessToken = await getAccessToken();
+
+//   const resp = await fetch(
+//     `${process.env.KINDE_DOMAIN_URL}/api/v1/users/${userId}/properties/roles`,
+//     {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       body: JSON.stringify({
+//         properties: {
+//           role,
+//         },
+//       }),
+//     },
+//   );
+// }
