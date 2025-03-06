@@ -27,11 +27,13 @@ import {
 
 export const CreateEhrForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
+    mode: "onBlur",
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       baseUrl: "",
       authType: "API_KEY",
+      mappings: [],
     },
   });
 
