@@ -49,12 +49,12 @@ export const CreateEhrForm = () => {
       mappings: values.mappings,
     });
 
-    form.reset();
     if (response.statusCode === 201) {
       toast.success(response.message);
       router.push("/dashboard/ehr");
     } else {
       toast.error(response.message);
+      form.reset();
     }
   }
 
