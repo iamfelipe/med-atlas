@@ -43,7 +43,16 @@ model EHRMapping {
   entityType  String   // Ej: Patient, Appointment
   fieldName   String   // Ej: p_name, PATIENT_IDENT_NAME
   mappingPath String   // Ej: patient.name, $.patient.p_name
-  dataType    String   // Ej: string, date
-  required    Boolean?  @default(true)
+  dataType    EHRDataType   // Ej: string, date
+  required    Boolean  @default(true)
   apiEndpoint String?  // Ej: /api/patient, /api/appointment
 }
+
+enum EHRDataType {
+  STRING
+  NUMBER
+  DATE
+  BOOLEAN
+  MULTIPLE
+}
+
