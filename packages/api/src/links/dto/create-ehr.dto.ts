@@ -1,14 +1,12 @@
-export class CreateLinkDto {}
-
 import { z } from "zod";
 
 export const createEhrMappingDtoSchema = z.object({
-  entityType: z.string(),
-  fieldName: z.string(),
-  mappingPath: z.string(),
-  dataType: z.enum(["string", "number", "boolean", "date"]),
+  entityType: z.string().min(1),
+  fieldName: z.string().min(1),
+  mappingPath: z.string().min(1),
+  dataType: z.enum(["string", "number", "date", "boolean", "multiple", "radio", "dropdown"]).default("string"),
   required: z.boolean().default(true),
-  apiEndpoint: z.string().optional(),
+  apiEndpoint: z.string().min(1),
 });
 
 export const createEhrDtoSchema = z.object({

@@ -8,7 +8,7 @@ export default function ClientLayout({
 }) {
   return (
     <>
-      <div className="hidden flex-col md:flex">
+      <div className="flex-col">
         <div className="border-b">
           <div className="flex h-16 items-center px-4">
             <h2 className="text-lg font-semibold">Patient Dashboard</h2>

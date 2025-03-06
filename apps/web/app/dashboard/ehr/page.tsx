@@ -1,8 +1,10 @@
+import { columns } from "@/components/table-ehr/ehr.columns";
+import { DataTable } from "@/components/table-ehr/ehr.data-table";
 import { Button } from "@/components/ui/button";
 import { getAllEhr } from "@/server/ehr";
 import Link from "next/link";
 
-export default async function Ehr() {
+export default async function EHRPage() {
   const { data: ehrList } = await getAllEhr();
 
   if (ehrList.length === 0) {
@@ -28,16 +30,7 @@ export default async function Ehr() {
           </Button>
         </div>
       </div>
-      <ol>
-        {ehrList.map((ehr) => (
-          <li key={ehr.id} className="flex gap-2">
-            <p>{ehr.name}</p>
-            <p>{ehr.baseUrl}</p>
-            <p>{ehr.authType}</p>
-            <p>{JSON.stringify(ehr.mappings, null, 2)}</p>
-          </li>
-        ))}
-      </ol>
+      <DataTable columns={columns} data={ehrList} />
     </>
   );
 }

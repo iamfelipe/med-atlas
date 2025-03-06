@@ -36,21 +36,25 @@ export class EhrController {
   }
 
   @Get()
+  @ResponseMessage('EHRs fetched successfully')
   async getAllEhr(): Promise<EHRWithMappings[]> {
     return this.ehrService.findAllWithMappings();
   }
 
   @Get(':id')
+  @ResponseMessage('EHR fetched successfully')
   findOne(@Param('id') id: string) {
-    return this.ehrService.findOne(+id);
+    return this.ehrService.findOne(id);
   }
 
   @Patch(':id')
+  @ResponseMessage('EHR updated successfully')
   update(@Param('id') id: string, @Body() updateEhrDto: UpdateEhrDto) {
     return this.ehrService.update(+id, updateEhrDto);
   }
 
   @Delete(':id')
+  @ResponseMessage('EHR deleted successfully')
   remove(@Param('id') id: string) {
     return this.ehrService.remove(+id);
   }

@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { EHR, PrismaClient } from '@prisma/client';
 // import { CreateEhrDto } from './dto/create-ehr.dto';
 import { CreateEhrDto } from '@repo/api/links/dto/create-ehr.dto';
@@ -45,8 +49,21 @@ export class EhrService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} ehr`;
+  async findOne(id: string): Promise<EHRWithMappings> {
+    const ehr = await this.prisma.eHR.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        mappings: true,
+      },
+    });
+
+    if (!ehr) {
+      throw new NotFoundException('EHR not found');
+    }
+
+    return ehr;
   }
 
   update(id: number, updateEhrDto: UpdateEhrDto) {
