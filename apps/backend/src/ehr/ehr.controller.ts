@@ -10,14 +10,13 @@ import {
   UsePipes,
 } from '@nestjs/common';
 
-import { UpdateEhrDto } from './dto/update-ehr.dto';
-
 import { EHRWithMappings } from '@repo/types';
 
 import {
   CreateEhrDto,
   createEhrDtoSchema,
 } from '@repo/api/links/dto/create-ehr.dto';
+import { UpdateEhrDtoWithMappings } from '@repo/api/links/dto/update.ehr.dto';
 import { ResponseMessage } from 'lib/response-message.decorator';
 import { TransformInterceptor } from 'lib/response.interceptor';
 import { ZodValidationPipe } from 'lib/zod-validation-pipe';
@@ -29,7 +28,7 @@ export class EhrController {
   constructor(private readonly ehrService: EhrService) {}
 
   @Post()
-  @ResponseMessage('EHR Created Succesfully')
+  @ResponseMessage('EHR Created Successfully')
   @UsePipes(new ZodValidationPipe(createEhrDtoSchema))
   create(@Body() createEhrDto: CreateEhrDto) {
     return this.ehrService.create(createEhrDto);
@@ -49,8 +48,11 @@ export class EhrController {
 
   @Patch(':id')
   @ResponseMessage('EHR updated successfully')
-  update(@Param('id') id: string, @Body() updateEhrDto: UpdateEhrDto) {
-    return this.ehrService.update(+id, updateEhrDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateEhrDto: UpdateEhrDtoWithMappings,
+  ) {
+    return this.ehrService.update(id, updateEhrDto);
   }
 
   @Delete(':id')
