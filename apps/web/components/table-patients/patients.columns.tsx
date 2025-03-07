@@ -10,13 +10,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { formatDateToHumanReadable } from "@/lib/utils";
+import { cn, formatDateToHumanReadable } from "@/lib/utils";
 import { getEhr } from "@/server/ehr/get-ehr";
 import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AssignEHR from "../assign-ehr";
-import { Badge } from "../ui/badge";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
@@ -50,13 +50,16 @@ export const columns: ColumnDef<User>[] = [
     header: "EHR",
     cell: ({ row }) => {
       const patient = row.original;
-      const [ehrName, setEhrName] = useState<string | null>(null);
+      const [EHR, setEHR] = useState<{ id: string; name: string } | null>(null);
 
       useEffect(() => {
         const fetchEhrName = async () => {
           if (patient.ehrId) {
             const resp = await getEhr(patient.ehrId);
-            setEhrName(resp.data.name);
+            setEHR({
+              id: resp.data.id,
+              name: resp.data.name,
+            });
           }
         };
         fetchEhrName();
@@ -66,7 +69,18 @@ export const columns: ColumnDef<User>[] = [
         return <AssignEHR userId={patient.id} />;
       }
 
-      return <Badge variant="outline">{ehrName || "Loading..."}</Badge>;
+      return (
+        <Button
+          variant="secondary"
+          size="sm"
+          className={cn(!EHR && "pointer-events-none")}
+          asChild
+        >
+          <Link href={`/dashboard/ehr/${EHR?.id}`}>
+            {EHR?.name || "Loading..."}
+          </Link>
+        </Button>
+      );
     },
   },
   {

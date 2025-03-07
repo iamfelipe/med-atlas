@@ -9,10 +9,10 @@ export const AppHeader = ({
 }) => {
   return (
     <div className="flex items-center justify-between space-y-2 mb-4">
-      <div>
+      <div className="flex flex-col gap-1">
         <h2 className="text-3xl font-bold tracking-tight">{title}</h2>
         {subtitle && (
-          <p className="text-sm text-muted-foreground">{subtitle}</p>
+          <p className="text-base text-muted-foreground">{subtitle}</p>
         )}
       </div>
       {children && (

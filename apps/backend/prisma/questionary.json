@@ -1,0 +1,42 @@
+{
+  "id": "1",
+  "userId": "1",
+  "ehrId": "1",
+  "responses": [
+    {
+      "id": "1",
+      "ehrMappingId": "1",
+      "name": "name",
+      "dataType": "string",
+      "value": "John Doe"
+    },
+    {
+      "id": "3",
+      "ehrMappingId": "3",
+      "name": "dob",
+      "dataType": "date",
+      "value": "1990-01-01"
+    },
+    {
+      "id": "4",
+      "ehrMappingId": "4",
+      "name": "address",
+      "dataType": "string",
+      "value": "123 Main St, Anytown, USA"
+    },
+    {
+      "id": "5",
+      "ehrMappingId": "5",
+      "name": "phone",
+      "dataType": "number",
+      "value": "1234567890"
+    },
+    {
+      "id": "6",
+      "ehrMappingId": "6",
+      "name": "email",
+      "dataType": "email",
+      "value": "john.doe@example.com"
+    }
+  ]
+}
