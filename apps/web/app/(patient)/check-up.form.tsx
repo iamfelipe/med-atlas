@@ -58,6 +58,7 @@ export const CheckUpForm = ({
         })) ?? [],
     },
   });
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "questions",
@@ -124,9 +125,23 @@ export const CheckUpForm = ({
           </Popover>
         );
       case "radio":
-        // Assuming options are stored in the mappingPath as comma-separated values
-        const radioOptions =
-          ehr?.mappings?.[index]?.mappingPath?.split(",") || [];
+        // Get the mapping ID to find the correct mapping
+        const radioMappingId = form.getValues(
+          `questions.${index}.mappingId`
+        ) as string;
+
+        // Find the mapping using the mappingId
+        const radioMapping = ehr?.mappings?.find(
+          (m) => m.id === radioMappingId
+        );
+        let radioOptions: string[] = [];
+
+        if (radioMapping?.options) {
+          radioOptions = radioMapping.options
+            .split(",")
+            .map((opt: string) => opt.trim());
+        }
+
         return (
           <FormControl>
             <RadioGroup
@@ -136,24 +151,47 @@ export const CheckUpForm = ({
               }}
               className="flex flex-col space-y-1"
             >
-              {radioOptions.map((option) => (
-                <div key={option} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option} id={`${field.id}-${option}`} />
-                  <label
-                    htmlFor={`${field.id}-${option}`}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {option.trim()}
-                  </label>
+              {radioOptions.length > 0 ? (
+                radioOptions.map((option) => (
+                  <div key={option} className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value={option}
+                      id={`${field.id}-${option}`}
+                    />
+                    <label
+                      htmlFor={`${field.id}-${option}`}
+                      className="text-sm font-medium leading-none"
+                    >
+                      {option}
+                    </label>
+                  </div>
+                ))
+              ) : (
+                <div className="text-sm text-red-500">
+                  No options available for this field
                 </div>
-              ))}
+              )}
             </RadioGroup>
           </FormControl>
         );
       case "dropdown":
-        // Assuming options are stored in the mappingPath as comma-separated values
-        const dropdownOptions =
-          ehr?.mappings?.[index]?.mappingPath?.split(",") || [];
+        // Get the mapping ID to find the correct mapping
+        const dropdownMappingId = form.getValues(
+          `questions.${index}.mappingId`
+        ) as string;
+
+        // Find the mapping using the mappingId
+        const dropdownMapping = ehr?.mappings?.find(
+          (m) => m.id === dropdownMappingId
+        );
+        let dropdownOptions: string[] = [];
+
+        if (dropdownMapping?.options) {
+          dropdownOptions = dropdownMapping.options
+            .split(",")
+            .map((opt: string) => opt.trim());
+        }
+
         return (
           <FormControl>
             <Select
@@ -166,11 +204,17 @@ export const CheckUpForm = ({
                 <SelectValue placeholder="Select an option" />
               </SelectTrigger>
               <SelectContent>
-                {dropdownOptions.map((option) => (
-                  <SelectItem key={option} value={option.trim()}>
-                    {option.trim()}
+                {dropdownOptions.length > 0 ? (
+                  dropdownOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="no-options" disabled>
+                    No options available for this field
                   </SelectItem>
-                ))}
+                )}
               </SelectContent>
             </Select>
           </FormControl>
@@ -189,46 +233,62 @@ export const CheckUpForm = ({
           </FormControl>
         );
       case "multiple":
-        // Assuming options are stored in the mappingPath as comma-separated values
-        const checkboxOptions =
-          ehr?.mappings?.[index]?.mappingPath?.split(",") || [];
+        // Get the mapping ID to find the correct mapping
+        const multipleMappingId = form.getValues(
+          `questions.${index}.mappingId`
+        ) as string;
+
+        // Find the mapping using the mappingId
+        const multipleMapping = ehr?.mappings?.find(
+          (m) => m.id === multipleMappingId
+        );
+        let checkboxOptions: string[] = [];
+
+        if (multipleMapping?.mappingPath) {
+          checkboxOptions = multipleMapping.mappingPath
+            .split(",")
+            .map((opt: string) => opt.trim());
+        }
+
         const selectedValues = field.value ? field.value.split(",") : [];
 
         return (
           <FormControl>
             <div className="flex flex-col space-y-2">
-              {checkboxOptions.map((option) => {
-                const optionValue = option.trim();
-                return (
-                  <div
-                    key={optionValue}
-                    className="flex items-center space-x-2"
-                  >
-                    <Checkbox
-                      id={`${field.id}-${optionValue}`}
-                      checked={selectedValues.includes(optionValue)}
-                      onCheckedChange={(checked) => {
-                        const newValues = checked
-                          ? [...selectedValues, optionValue]
-                          : selectedValues.filter(
-                              (val: string) => val !== optionValue
-                            );
+              {checkboxOptions.length > 0 ? (
+                checkboxOptions.map((option) => {
+                  return (
+                    <div key={option} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`${field.id}-${option}`}
+                        checked={selectedValues.includes(option)}
+                        onCheckedChange={(checked) => {
+                          const newValues = checked
+                            ? [...selectedValues, option]
+                            : selectedValues.filter(
+                                (val: string) => val !== option
+                              );
 
-                        form.setValue(
-                          `questions.${index}.value`,
-                          newValues.join(",")
-                        );
-                      }}
-                    />
-                    <label
-                      htmlFor={`${field.id}-${optionValue}`}
-                      className="text-sm font-medium leading-none"
-                    >
-                      {optionValue}
-                    </label>
-                  </div>
-                );
-              })}
+                          form.setValue(
+                            `questions.${index}.value`,
+                            newValues.join(",")
+                          );
+                        }}
+                      />
+                      <label
+                        htmlFor={`${field.id}-${option}`}
+                        className="text-sm font-medium leading-none"
+                      >
+                        {option}
+                      </label>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="text-sm text-red-500">
+                  No options available for this field
+                </div>
+              )}
             </div>
           </FormControl>
         );
