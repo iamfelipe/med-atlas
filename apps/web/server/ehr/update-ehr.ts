@@ -4,7 +4,7 @@ export const updateEhr = async (id: string, ehr: UpdateEhrDto) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER}/ehr/${id}`,
     {
-      method: "PATCH",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },

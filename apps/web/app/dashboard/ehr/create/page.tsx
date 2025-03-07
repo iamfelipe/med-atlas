@@ -1,3 +1,4 @@
+import { defaultMapping } from "@/components/ehr.form";
 import { CreateEHR } from "./create-ehr";
 
 export default async function CreateEHRPage() {
@@ -12,16 +13,7 @@ export default async function CreateEHRPage() {
             name: "",
             baseUrl: "",
             authType: "API_KEY",
-            mappings: [
-              {
-                entityType: "",
-                fieldName: "",
-                mappingPath: "",
-                dataType: "string",
-                required: true,
-                apiEndpoint: "",
-              },
-            ],
+            mappings: [defaultMapping],
           }}
         />
       </div>

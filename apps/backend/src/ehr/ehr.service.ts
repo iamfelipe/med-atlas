@@ -32,6 +32,9 @@ export class EhrService {
           create: mappings,
         },
       },
+      include: {
+        mappings: true,
+      },
     });
 
     return ehr;
@@ -70,51 +73,67 @@ export class EhrService {
     id: string,
     updateEhrDto: UpdateEhrDto,
   ): Promise<EHRWithMappings> {
-    const { mappings, ...ehrData } = updateEhrDto;
+    const { mappings: payloadMappings, ...ehrData } = updateEhrDto;
 
-    // First update the EHR data
-    await this.prisma.eHR.update({
+    // Get the existing EHR
+    const existingEhr = await this.prisma.eHR.findUnique({
       where: { id },
-      data: ehrData,
+      include: {
+        mappings: true,
+      },
     });
 
-    // Then handle mappings separately
-    if (mappings && mappings.length > 0) {
-      // Delete existing mappings
-      await this.prisma.eHRMapping.deleteMany({
-        where: { ehrId: id },
-      });
-
-      // Filter out mappings with missing required fields and create new ones
-      const validMappings = mappings
-        .filter(
-          (mapping) =>
-            mapping.entityType &&
-            mapping.fieldName &&
-            mapping.mappingPath &&
-            mapping.dataType &&
-            mapping.required &&
-            mapping.apiEndpoint,
-        )
-        .map((mapping) => ({
-          ehrId: id,
-          entityType: mapping.entityType!,
-          fieldName: mapping.fieldName!,
-          mappingPath: mapping.mappingPath!,
-          dataType: mapping.dataType!,
-          required: mapping.required ?? true,
-          apiEndpoint: mapping.apiEndpoint || null,
-        }));
-
-      if (validMappings.length > 0) {
-        await this.prisma.eHRMapping.createMany({
-          data: validMappings,
-        });
-      }
+    if (!existingEhr) {
+      throw new NotFoundException('EHR not found');
     }
 
-    // Return the updated EHR with mappings
-    return this.findOne(id);
+    // If the EHR has no mappings, throw an error should have at least one mapping
+    if (updateEhrDto.mappings.length === 0) {
+      throw new ConflictException('EHR should have at least one mapping');
+    }
+
+    // Get the existing mappings from database
+    const existingMappings = await this.prisma.eHRMapping.findMany({
+      where: { ehrId: id },
+    });
+
+    // Get the mappings that are not in the updateEhrDto
+    const mappingsToDelete = existingMappings.filter(
+      ({ id }) =>
+        !payloadMappings.some(({ id: mappingId }) => mappingId === id),
+    );
+
+    // Delete the mappings that are not in the updateEhrDto
+    await this.prisma.eHRMapping.deleteMany({
+      where: { id: { in: mappingsToDelete.map((mapping) => mapping.id) } },
+    });
+
+    // Update the mappings that are in the updateEhrDto
+    const updatedMappings = await Promise.all(
+      payloadMappings.map((mapping) => {
+        const { id: mappingId, ...rest } = mapping;
+        if (mappingId) {
+          return this.prisma.eHRMapping.update({
+            where: { id: mappingId },
+            data: { ...rest },
+          });
+        } else {
+          return this.prisma.eHRMapping.create({
+            data: { ...rest, ehrId: id },
+          });
+        }
+      }),
+    );
+
+    const updatedEhr = await this.prisma.eHR.update({
+      where: { id },
+      data: ehrData,
+      include: {
+        mappings: true,
+      },
+    });
+
+    return updatedEhr;
   }
 
   remove(id: number) {

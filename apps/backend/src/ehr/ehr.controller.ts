@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Put,
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
@@ -46,8 +46,9 @@ export class EhrController {
     return this.ehrService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ResponseMessage('EHR updated successfully')
+  // @UsePipes(new ZodValidationPipe(createEhrDtoSchema))
   update(@Param('id') id: string, @Body() updateEhrDto: UpdateEhrDto) {
     return this.ehrService.update(id, updateEhrDto);
   }

@@ -1,12 +1,14 @@
 import { z } from "zod";
 
 export const createEhrMappingDtoSchema = z.object({
+  id: z.string().optional(),
+  ehrId: z.string().optional(),
   entityType: z.string().min(1),
   fieldName: z.string().min(1),
   mappingPath: z.string().min(1),
   dataType: z.enum(["string", "number", "date", "boolean", "multiple", "radio", "dropdown"]).default("string"),
   required: z.boolean().default(true),
-  apiEndpoint: z.string().min(1),
+  apiEndpoint: z.string().min(2).default("/"),
 });
 
 export const createEhrDtoSchema = z.object({

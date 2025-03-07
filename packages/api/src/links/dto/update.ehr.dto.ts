@@ -6,9 +6,10 @@ import {
 
 
 export const updateEhrDtoSchema = z.object({
+  id: z.string(),
   ...createEhrDtoSchema.shape,
-  mappings: z.array(createEhrMappingDtoSchema.partial())
-}).partial();
+  mappings: z.array(createEhrMappingDtoSchema.extend({ id: z.string().optional(), ehrId: z.string().optional() }))
+});
 
 export type UpdateEhrDto = z.infer<
   typeof updateEhrDtoSchema

@@ -5,6 +5,7 @@ import { EHRWithMappings } from "@repo/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Badge } from "../ui/badge";
 import { DataTableColumnHeader } from "../ui/data-table-column-header";
 import {
   DropdownMenu,
@@ -37,6 +38,21 @@ export const columns: ColumnDef<EHRWithMappings>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Auth type" />
     ),
+  },
+  {
+    accessorKey: "mappings",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Mappings" />
+    ),
+    cell: ({ row }) => {
+      const ehr = row.original;
+      const mappingsTotal = ehr.mappings.length;
+      return (
+        <Badge variant={mappingsTotal > 0 ? "default" : "outline"}>
+          {mappingsTotal}
+        </Badge>
+      );
+    },
   },
   {
     id: "actions",

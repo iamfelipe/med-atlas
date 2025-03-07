@@ -29,21 +29,23 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Trash2 } from "lucide-react";
 
-const defaultMapping: CreateEhrMappingDto = {
-  entityType: "",
+export const defaultMapping: CreateEhrMappingDto = {
+  entityType: "patient",
   fieldName: "",
   mappingPath: "",
   dataType: "string",
   required: true,
-  apiEndpoint: "",
+  apiEndpoint: "/",
 };
 
 export const EHRForm = ({
   ehr: defaultValues,
   handleSubmit,
+  submitButtonText = "Create",
 }: {
   ehr: CreateEhrDto;
   handleSubmit: (values: CreateEhrDto) => Promise<void>;
+  submitButtonText?: string;
 }) => {
   const form = useForm<CreateEhrDto>({
     resolver: zodResolver(formSchema),
@@ -62,8 +64,8 @@ export const EHRForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex flex-col gap-8">
-          <div className="flex gap-4 items-start">
+        <div className="flex flex-col gap-4">
+          <div className="flex gap-4 items-end">
             <FormField
               control={form.control}
               name="name"
@@ -73,7 +75,7 @@ export const EHRForm = ({
                   <FormControl>
                     <Input placeholder="EHR Name" {...field} />
                   </FormControl>
-                  <FormDescription>This is the name.</FormDescription>
+
                   <FormMessage />
                 </FormItem>
               )}
@@ -88,7 +90,7 @@ export const EHRForm = ({
                     <FormControl>
                       <Input placeholder="EHR Base URL" {...field} />
                     </FormControl>
-                    <FormDescription>This is the base URL.</FormDescription>
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -121,137 +123,173 @@ export const EHRForm = ({
                 </FormItem>
               )}
             />
+            <div className="ml-auto">
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? "Creating..." : submitButtonText}
+              </Button>
+            </div>
           </div>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => append(defaultMapping)}
-          >
-            Add implementation
-          </Button>
-          <div className="flex flex-col gap-4">
-            {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="flex flex-1 gap-4 bg-zinc-50 pt-12 p-8 rounded-lg relative items-start"
-              >
-                <div className="absolute top-0 right-0 p-4">
-                  <Button
-                    type="button"
-                    onClick={() => remove(index)}
-                    disabled={fields.length === 1}
-                    size="icon"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-                <div className="flex-1 items-start gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                  <FormField
-                    control={form.control}
-                    name={`mappings.${index}.entityType`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Entity Type</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Patient" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`mappings.${index}.dataType`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Data Type</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select a type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="string">String</SelectItem>
-                            <SelectItem value="number">Number</SelectItem>
-                            <SelectItem value="date">Date</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`mappings.${index}.fieldName`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Field Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="p_name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
 
-                  <FormField
-                    control={form.control}
-                    name={`mappings.${index}.apiEndpoint`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>API Endpoint</FormLabel>
-                        <FormControl>
-                          <Input placeholder="/api/patient" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`mappings.${index}.mappingPath`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Mapping Path</FormLabel>
-                        <FormControl>
-                          <Input placeholder="$.patient.p_name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name={`mappings.${index}.required`}
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col gap-2">
-                        <FormLabel>Required</FormLabel>
-                        <div className="flex flex-row rounded-lg border py-2 px-3 shadow-xs items-center justify-between bg-white">
-                          <FormDescription>
-                            This is whether the field is required.
-                          </FormDescription>
+          <div className="flex flex-col gap-4 bg-zinc-50 rounded-lg px-8 pt-4 pb-8">
+            <div className="divide-y divide-zinc-200">
+              {fields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="flex flex-1 gap-4 relative items-start py-6"
+                >
+                  <div className="flex-1 items-start gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+                    <div className="">
+                      <FormField
+                        control={form.control}
+                        name={`mappings.${index}.entityType`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Entity Type</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Patient" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="">
+                      <FormField
+                        control={form.control}
+                        name={`mappings.${index}.fieldName`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Field Name</FormLabel>
+                            <FormControl>
+                              <Input placeholder="p_name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="">
+                      <FormField
+                        control={form.control}
+                        name={`mappings.${index}.dataType`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Data Type</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select a type" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="string">String</SelectItem>
+                                <SelectItem value="number">Number</SelectItem>
+                                <SelectItem value="date">Date</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="">
+                      <FormField
+                        control={form.control}
+                        name={`mappings.${index}.apiEndpoint`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>API Endpoint</FormLabel>
+                            <FormControl>
+                              <Input placeholder="/api/patient" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="">
+                      <FormField
+                        control={form.control}
+                        name={`mappings.${index}.mappingPath`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Mapping Path</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="$.patient.p_name"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="">
+                      <FormField
+                        control={form.control}
+                        name={`mappings.${index}.required`}
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col gap-2">
+                            <FormLabel>Required</FormLabel>
+                            <div className="flex flex-row rounded-lg border py-2 px-3 shadow-xs items-center justify-between bg-white">
+                              <FormDescription>
+                                The field is required
+                              </FormDescription>
 
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </div>
-                      </FormItem>
-                    )}
-                  />
+                              <FormControl>
+                                <Switch
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                              </FormControl>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="">
+                      {defaultValues?.mappings?.[index]?.id && (
+                        <FormField
+                          control={form.control}
+                          name={`mappings.${index}.id`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>ID</FormLabel>
+                              <FormControl>
+                                <Input placeholder="id" disabled {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div className="mt-5">
+                    <Button
+                      type="button"
+                      onClick={() => remove(index)}
+                      disabled={fields.length === 1}
+                      size="icon"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => append(defaultMapping)}
+            >
+              Add implementation
+            </Button>
           </div>
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? "Creating..." : "Create"}
-          </Button>
         </div>
       </form>
     </Form>
