@@ -56,6 +56,6 @@ export class EhrController {
   @Delete(':id')
   @ResponseMessage('EHR deleted successfully')
   remove(@Param('id') id: string) {
-    return this.ehrService.remove(+id);
+    return this.ehrService.remove(id);
   }
 }

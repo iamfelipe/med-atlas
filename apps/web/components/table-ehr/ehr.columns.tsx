@@ -1,11 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { deleteEhr } from "@/server/ehr/delete-ehr";
 import { EHRWithMappings } from "@repo/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Badge } from "../ui/badge";
 import { DataTableColumnHeader } from "../ui/data-table-column-header";
 import {
@@ -88,9 +90,17 @@ export const columns: ColumnDef<EHRWithMappings>[] = [
             >
               Edit
             </DropdownMenuItem>
+
             <DropdownMenuItem
-              onClick={() => {
-                router.push(`/dashboard/ehr/${ehr.id}/delete`);
+              variant="destructive"
+              onClick={async () => {
+                const response = await deleteEhr(ehr.id);
+                if (response.statusCode === 200) {
+                  toast.success(response.message);
+                  router.refresh();
+                } else {
+                  toast.error(response.message);
+                }
               }}
             >
               Delete

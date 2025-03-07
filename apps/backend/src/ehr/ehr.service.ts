@@ -136,7 +136,21 @@ export class EhrService {
     return updatedEhr;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} ehr`;
+  async remove(id: string) {
+    // Check if the EHR exists
+    const ehr = await this.prisma.eHR.findUnique({
+      where: { id },
+    });
+
+    if (!ehr) {
+      throw new NotFoundException('EHR not found');
+    }
+
+    return await this.prisma.eHR.delete({
+      where: { id },
+      include: {
+        mappings: true,
+      },
+    });
   }
 }
