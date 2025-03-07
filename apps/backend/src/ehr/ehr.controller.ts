@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
@@ -34,10 +35,13 @@ export class EhrController {
     return this.ehrService.create(createEhrDto);
   }
 
+  // Get all EHRs with mappings if is set to true
   @Get()
   @ResponseMessage('EHRs fetched successfully')
-  async getAllEhr(): Promise<EHRWithMappings[]> {
-    return this.ehrService.findAllWithMappings();
+  async getAllEhr(
+    @Query('isWithMappings') isWithMappings: string,
+  ): Promise<EHRWithMappings[]> {
+    return this.ehrService.findAllWithMappings(isWithMappings === 'true');
   }
 
   @Get(':id')

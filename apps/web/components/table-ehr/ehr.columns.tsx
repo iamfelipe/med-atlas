@@ -9,7 +9,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Badge } from "../ui/badge";
-import { DataTableColumnHeader } from "../ui/data-table-column-header";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,9 +21,7 @@ import {
 export const columns: ColumnDef<EHRWithMappings>[] = [
   {
     accessorKey: "name",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
-    ),
+    header: "Name",
     cell: ({ row }) => {
       const ehr = row.original;
 
@@ -37,21 +34,15 @@ export const columns: ColumnDef<EHRWithMappings>[] = [
   },
   {
     accessorKey: "baseUrl",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Base URL" />
-    ),
+    header: "Base URL",
   },
   {
     accessorKey: "authType",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Auth type" />
-    ),
+    header: "Auth type",
   },
   {
     accessorKey: "mappings",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Mappings" />
-    ),
+    header: "Mappings",
     cell: ({ row }) => {
       const ehr = row.original;
       const mappingsTotal = ehr.mappings.length;

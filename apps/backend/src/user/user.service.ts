@@ -1,4 +1,3 @@
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import {
   ConflictException,
   Injectable,
@@ -47,6 +46,40 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async assignEhrToUser(userId: string, ehrId: string): Promise<User | null> {
+    console.log({ userId, ehrId });
+
+    // Check if the user exists
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    // Check if the EHR exists
+    const ehr = await this.prisma.eHR.findUnique({
+      where: { id: ehrId },
+    });
+
+    if (!ehr) {
+      throw new NotFoundException(`EHR with ID ${ehrId} not found`);
+    }
+
+    // Check if the user already has an EHR assigned
+    if (user.ehrId) {
+      throw new ConflictException(
+        `User with ID ${userId} already has an EHR assigned`,
+      );
+    }
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { ehrId },
+    });
   }
 
   async updateUserRole(id: string, role: string): Promise<User | null> {

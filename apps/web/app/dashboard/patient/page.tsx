@@ -1,7 +1,6 @@
 import { columns } from "@/components/table-patients/patients.columns";
 import { DataTable } from "@/components/table-patients/patients.data-table";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getAllPatients } from "@/server/user";
 
 export default async function Patient() {
@@ -15,18 +14,7 @@ export default async function Patient() {
           <Button>Add patient</Button>
         </div>
       </div>
-      <Tabs defaultValue="all" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="Pending">Pending</TabsTrigger>
-        </TabsList>
-        <TabsContent value="all">
-          <DataTable columns={columns} data={patients} />
-        </TabsContent>
-        <TabsContent value="Pending">
-          <p>Pending</p>
-        </TabsContent>
-      </Tabs>
+      <DataTable columns={columns} data={patients} />
     </>
   );
 }

@@ -7,6 +7,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
@@ -63,6 +64,21 @@ export class UserController {
   async delete(@Param('id') id: string) {
     try {
       return this.userService.deleteUser(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throw new BadRequestException(error.message as string);
+    }
+  }
+
+  @Patch(':id/assign-ehr')
+  async assignEhrToUser(
+    @Param('id') id: string,
+    @Body() assignEhrDto: { ehrId: string },
+  ) {
+    try {
+      return this.userService.assignEhrToUser(id, assignEhrDto.ehrId);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);

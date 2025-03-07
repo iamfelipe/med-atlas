@@ -44,10 +44,12 @@ export class EhrService {
     return this.prisma.eHR.findMany();
   }
 
-  async findAllWithMappings(): Promise<EHRWithMappings[]> {
+  async findAllWithMappings(
+    isWithMappings: boolean = true,
+  ): Promise<EHRWithMappings[]> {
     return this.prisma.eHR.findMany({
       include: {
-        mappings: true,
+        mappings: isWithMappings,
       },
     });
   }
