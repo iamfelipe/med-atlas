@@ -36,6 +36,7 @@ export const defaultMapping: CreateEhrMappingDto = {
   dataType: "string",
   required: true,
   apiEndpoint: "/",
+  options: "",
 };
 
 export const EHRForm = ({
@@ -188,6 +189,11 @@ export const EHRForm = ({
                                 <SelectItem value="string">String</SelectItem>
                                 <SelectItem value="number">Number</SelectItem>
                                 <SelectItem value="date">Date</SelectItem>
+                                <SelectItem value="boolean">Boolean</SelectItem>
+                                <SelectItem value="dropdown">
+                                  Dropdown
+                                </SelectItem>
+                                <SelectItem value="radio">Radio</SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -251,6 +257,28 @@ export const EHRForm = ({
                         )}
                       />
                     </div>
+
+                    <div className="">
+                      <FormField
+                        control={form.control}
+                        name={`mappings.${index}.options`}
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col gap-2">
+                            <FormLabel>Options*</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Option 1, Option 2"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Separate options with a comma
+                            </FormDescription>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
                     <div className="">
                       {defaultValues?.mappings?.[index]?.id && (
                         <FormField

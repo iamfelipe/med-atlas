@@ -4,10 +4,11 @@ import { createEhrMappingDtoSchema } from "./create-ehr.dto";
 export const createCheckUpDtoSchema = z.object({
   questions: z.array(
     z.object({
-      id: z.string(),
+      mappingId: createEhrMappingDtoSchema.shape.id,
       name: createEhrMappingDtoSchema.shape.fieldName,
       dataType: createEhrMappingDtoSchema.shape.dataType,
       value: z.string(),
+      options: createEhrMappingDtoSchema.shape.options,
     }),
   ),
 });

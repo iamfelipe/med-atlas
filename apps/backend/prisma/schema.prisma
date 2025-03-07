@@ -46,7 +46,10 @@ model EHRMapping {
   dataType    EHRDataType  @default(string)   // Ej: string, date
   required    Boolean  @default(true)
   apiEndpoint String  // Ej: /api/patient, /api/appointment
+  options     String? // Ej: ["Option 1", "Option 2"] optional
 }
+
+
 
 enum EHRDataType {
   string

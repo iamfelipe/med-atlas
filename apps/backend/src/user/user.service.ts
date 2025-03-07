@@ -49,8 +49,6 @@ export class UserService {
   }
 
   async assignEhrToUser(userId: string, ehrId: string): Promise<User | null> {
-    console.log({ userId, ehrId });
-
     // Check if the user exists
     const user = await this.prisma.user.findUnique({
       where: { id: userId },

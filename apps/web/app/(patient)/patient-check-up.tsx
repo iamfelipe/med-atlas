@@ -26,8 +26,6 @@ export const PatientCheckUp = ({
     return <div>Loading...</div>;
   }
 
-  console.log(ehr.mappings);
-
   return (
     <div>
       <h1>CheckUp</h1>

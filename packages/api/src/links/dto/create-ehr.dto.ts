@@ -9,6 +9,7 @@ export const createEhrMappingDtoSchema = z.object({
   dataType: z.enum(["string", "number", "date", "boolean", "multiple", "radio", "dropdown"]).default("string"),
   required: z.boolean().default(true),
   apiEndpoint: z.string().min(2).default("/"),
+  options: z.string().optional(),
 });
 
 export const createEhrDtoSchema = z.object({

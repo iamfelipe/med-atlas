@@ -51,7 +51,7 @@ export const CheckUpForm = ({
     defaultValues: {
       questions:
         ehr.mappings?.map((mapping) => ({
-          id: mapping.id,
+          mappingId: mapping.id,
           name: mapping.fieldName,
           dataType: mapping.dataType,
           value: "",
@@ -63,15 +63,11 @@ export const CheckUpForm = ({
     name: "questions",
   });
 
-  if (!ehr) {
-    return <div>Loading...</div>;
-  }
-
   async function onSubmit(values: CreateCheckUpDto) {
     if (handleSubmit) {
       await handleSubmit(values);
     }
-    console.log(values);
+    console.log({ userId, ehrId: ehr.id, questions: values.questions });
   }
 
   // Function to render the appropriate input based on dataType
