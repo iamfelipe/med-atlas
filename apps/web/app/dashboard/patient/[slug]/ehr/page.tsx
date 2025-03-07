@@ -5,9 +5,10 @@ import { getUser } from "@/server/users";
 export default async function PatientEhrPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const { data: user } = await getUser(params.slug);
+  const { slug: id } = await params;
+  const { data: user } = await getUser(id);
 
   if (!user.ehrId) {
     return (

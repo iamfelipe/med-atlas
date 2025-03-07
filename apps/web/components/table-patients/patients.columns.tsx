@@ -66,7 +66,7 @@ export const columns: ColumnDef<User>[] = [
         return <AssignEHR userId={patient.id} />;
       }
 
-      return <Badge>{ehrName || "Loading..."}</Badge>;
+      return <Badge variant="outline">{ehrName || "Loading..."}</Badge>;
     },
   },
   {
@@ -85,14 +85,7 @@ export const columns: ColumnDef<User>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuItem
               onClick={() => {
-                router.push(`/dashboard/ehr/${ehr.id}`);
-              }}
-            >
-              View
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                router.push(`/dashboard/ehr/${ehr.id}/edit`);
+                router.push(`/dashboard/patient/${ehr.id}`);
               }}
             >
               Edit
