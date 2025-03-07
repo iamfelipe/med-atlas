@@ -2,14 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  CreateEhrDto,
   CreateEhrMappingDto,
   createEhrDtoSchema as formSchema,
 } from "@repo/api/links/dto/create-ehr.dto";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,10 +27,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { createEhr } from "@/server/ehr/create-ehr";
 import { Trash2 } from "lucide-react";
 
-// Define the default mapping outside the component to avoid recreation on each render
 const defaultMapping: CreateEhrMappingDto = {
   entityType: "",
   fieldName: "",
@@ -43,17 +38,16 @@ const defaultMapping: CreateEhrMappingDto = {
   apiEndpoint: "",
 };
 
-export const CreateEhrForm = () => {
-  const router = useRouter();
-
-  const form = useForm<z.infer<typeof formSchema>>({
+export const EHRForm = ({
+  ehr: defaultValues,
+  handleSubmit,
+}: {
+  ehr: CreateEhrDto;
+  handleSubmit: (values: CreateEhrDto) => Promise<void>;
+}) => {
+  const form = useForm<CreateEhrDto>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "Athena",
-      baseUrl: "https://api.athenahealth.com",
-      authType: "API_KEY",
-      mappings: [],
-    },
+    defaultValues,
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -61,30 +55,8 @@ export const CreateEhrForm = () => {
     name: "mappings",
   });
 
-  // Initialize default mapping on client-side only to avoid hydration mismatch
-  useEffect(() => {
-    // Only add a default mapping if there are none
-    if (fields.length === 0) {
-      append(defaultMapping);
-    }
-  }, []);
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    const response = await createEhr({
-      authType: values.authType,
-      baseUrl: values.baseUrl,
-      name: values.name,
-      mappings: values.mappings,
-    });
-
-    if (response.statusCode === 201) {
-      toast.success(response.message);
-      router.push("/dashboard/ehr");
-    } else {
-      toast.error(response.message);
-      // form.reset();
-    }
+  async function onSubmit(values: CreateEhrDto) {
+    await handleSubmit(values);
   }
 
   return (

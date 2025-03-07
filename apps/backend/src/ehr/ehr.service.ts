@@ -6,7 +6,7 @@ import {
 import { EHR, PrismaClient } from '@prisma/client';
 // import { CreateEhrDto } from './dto/create-ehr.dto';
 import { CreateEhrDto } from '@repo/api/links/dto/create-ehr.dto';
-import { UpdateEhrDtoWithMappings } from '@repo/api/links/dto/update.ehr.dto';
+import { UpdateEhrDto } from '@repo/api/links/dto/update.ehr.dto';
 import { EHRWithMappings } from './entities/ehr.entity';
 @Injectable()
 export class EhrService {
@@ -68,7 +68,7 @@ export class EhrService {
 
   async update(
     id: string,
-    updateEhrDto: UpdateEhrDtoWithMappings,
+    updateEhrDto: UpdateEhrDto,
   ): Promise<EHRWithMappings> {
     const { mappings, ...ehrData } = updateEhrDto;
 

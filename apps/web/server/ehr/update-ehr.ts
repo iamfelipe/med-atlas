@@ -1,6 +1,6 @@
-import { UpdateEhrDtoWithMappings } from "@repo/api/links/dto/update.ehr.dto";
+import { UpdateEhrDto } from "@repo/api/links/dto/update.ehr.dto";
 
-export const updateEhr = async (id: string, ehr: UpdateEhrDtoWithMappings) => {
+export const updateEhr = async (id: string, ehr: UpdateEhrDto) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER}/ehr/${id}`,
     {

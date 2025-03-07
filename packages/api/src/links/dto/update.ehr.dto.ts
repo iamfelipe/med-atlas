@@ -5,11 +5,11 @@ import {
 } from "./create-ehr.dto";
 
 
-export const updateEhrDtoSchemaWithMappings = z.object({
+export const updateEhrDtoSchema = z.object({
   ...createEhrDtoSchema.shape,
   mappings: z.array(createEhrMappingDtoSchema.partial())
 }).partial();
 
-export type UpdateEhrDtoWithMappings = z.infer<
-  typeof updateEhrDtoSchemaWithMappings
+export type UpdateEhrDto = z.infer<
+  typeof updateEhrDtoSchema
 >;

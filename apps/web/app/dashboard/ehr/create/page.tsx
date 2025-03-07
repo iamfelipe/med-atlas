@@ -1,4 +1,4 @@
-import { CreateEhrForm } from "./create-ehr.form";
+import { CreateEHR } from "./create-ehr";
 
 export default async function CreateEHRPage() {
   return (
@@ -7,7 +7,23 @@ export default async function CreateEHRPage() {
         <h2 className="text-3xl font-bold tracking-tight">Create EHR</h2>
       </div>
       <div>
-        <CreateEhrForm />
+        <CreateEHR
+          ehr={{
+            name: "",
+            baseUrl: "",
+            authType: "API_KEY",
+            mappings: [
+              {
+                entityType: "",
+                fieldName: "",
+                mappingPath: "",
+                dataType: "string",
+                required: true,
+                apiEndpoint: "",
+              },
+            ],
+          }}
+        />
       </div>
     </>
   );
