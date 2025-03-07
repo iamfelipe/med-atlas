@@ -1,7 +1,7 @@
 import { getUsers } from "@/server/users";
 
 export default async function Dashboard() {
-  const users = await getUsers();
+  const { data: users } = await getUsers();
 
   return (
     <>

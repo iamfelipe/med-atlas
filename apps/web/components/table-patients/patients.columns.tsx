@@ -15,6 +15,7 @@ import { getEhr } from "@/server/ehr/get-ehr";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import AssignEHR from "../assign-ehr";
 import { Badge } from "../ui/badge";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -62,11 +63,7 @@ export const columns: ColumnDef<User>[] = [
       }, [patient.ehrId]);
 
       if (!patient.ehrId) {
-        return (
-          <Button variant="outline" size="sm">
-            Assign EHR
-          </Button>
-        );
+        return <AssignEHR userId={patient.id} />;
       }
 
       return <Badge>{ehrName || "Loading..."}</Badge>;

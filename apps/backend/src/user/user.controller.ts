@@ -10,12 +10,16 @@ import {
   Patch,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
 
+import { ResponseMessage } from 'lib/response-message.decorator';
+import { TransformInterceptor } from 'lib/response.interceptor';
 import { UserService } from './user.service';
 
 @Controller('user')
+@UseInterceptors(TransformInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -72,7 +76,8 @@ export class UserController {
     }
   }
 
-  @Patch(':id/assign-ehr')
+  @Patch(':id/ehr')
+  @ResponseMessage('EHR assigned to user successfully')
   async assignEhrToUser(
     @Param('id') id: string,
     @Body() assignEhrDto: { ehrId: string },

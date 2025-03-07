@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { getAllPatients } from "@/server/user";
 
 export default async function Patient() {
-  const patients = await getAllPatients();
+  const { data: patients } = await getAllPatients();
 
   return (
     <>

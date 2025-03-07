@@ -1,11 +1,13 @@
 import { User } from "@prisma/client";
+import { Response } from "@repo/types";
+
 export const createUser = async (user: {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
   role: string;
-}): Promise<User> => {
+}): Promise<Response<User>> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_SERVER}/user`, {
     method: "POST",
     body: JSON.stringify(user),

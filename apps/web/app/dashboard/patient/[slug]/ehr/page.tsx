@@ -7,7 +7,7 @@ export default async function PatientEhrPage({
 }: {
   params: { slug: string };
 }) {
-  const user = await getUser(params.slug);
+  const { data: user } = await getUser(params.slug);
 
   if (!user.ehrId) {
     return (
