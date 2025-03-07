@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { EHRWithMappings } from "@repo/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Badge } from "../ui/badge";
 import { DataTableColumnHeader } from "../ui/data-table-column-header";
@@ -18,14 +19,19 @@ import {
 
 export const columns: ColumnDef<EHRWithMappings>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
-  },
-  {
     accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
+    cell: ({ row }) => {
+      const ehr = row.original;
+
+      return (
+        <Button variant="link" asChild className="p-0">
+          <Link href={`/dashboard/ehr/${ehr.id}`}>{ehr.name}</Link>
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "baseUrl",
