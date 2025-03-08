@@ -5,6 +5,7 @@ import {
   CreateCheckUpDto,
   createCheckUpDtoSchema,
 } from "@repo/api/links/dto/create-check-up.dto";
+import { CreateFormDto } from "@repo/api/links/dto/create-form.dto";
 import { useFieldArray, useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -33,9 +34,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { createForm } from "@/server/form/create-form";
 import { EHRWithMappings } from "@repo/types";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -49,6 +52,7 @@ export const CheckUpForm = ({
   handleSubmit?: (values: CreateCheckUpDto) => Promise<void>;
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const form = useForm<CreateCheckUpDto>({
     resolver: zodResolver(createCheckUpDtoSchema),
@@ -111,8 +115,31 @@ export const CheckUpForm = ({
 
       setIsSubmitting(true);
 
+      // If custom handler is provided, use it
       if (handleSubmit) {
         await handleSubmit(values);
+      } else {
+        // Otherwise, create a form using the form creation service
+        const formData: CreateFormDto = {
+          name: `Check-up for ${userId}`,
+          userId,
+          ehrId: ehr.id,
+          status: values.status,
+          questions:
+            values.questions?.map((question) => ({
+              mappingId: question.mappingId || "",
+              value: question.value,
+            })) || [],
+        };
+
+        const response = await createForm(formData);
+
+        if (!response.success) {
+          throw new Error(response.message);
+        }
+
+        // Refresh the page to show the updated data
+        router.refresh();
       }
 
       console.log({ userId, ehrId: ehr.id, questions: values.questions });
