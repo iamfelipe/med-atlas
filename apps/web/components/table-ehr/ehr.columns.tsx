@@ -45,7 +45,7 @@ export const columns: ColumnDef<EHRWithMappings>[] = [
     header: "Mappings",
     cell: ({ row }) => {
       const ehr = row.original;
-      const mappingsTotal = ehr.mappings.length;
+      const mappingsTotal = ehr.mappings?.length || 0;
       return (
         <Badge variant={mappingsTotal > 0 ? "default" : "outline"}>
           {mappingsTotal}
