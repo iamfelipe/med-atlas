@@ -7,6 +7,12 @@ import { CreateFormDto } from "@repo/api/links/dto/create-form.dto";
  */
 export const createForm = async (form: CreateFormDto) => {
   try {
+    // Set the status to completed when creating the form
+    const formData = {
+      ...form,
+      status: "completed",
+    };
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_SERVER}/forms`,
       {
@@ -14,7 +20,7 @@ export const createForm = async (form: CreateFormDto) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(formData),
       }
     );
 

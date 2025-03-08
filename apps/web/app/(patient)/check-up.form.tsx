@@ -33,14 +33,41 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { createForm } from "@/server/form/create-form";
+import { getUserForm } from "@/server/form/get-user-form";
 import { EHRWithMappings } from "@repo/types";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+
+// Define the form data type
+interface FormData {
+  id: string;
+  name: string;
+  status: string;
+  userId: string;
+  ehrId: string;
+  createdAt: string;
+  updatedAt: string;
+  questions: {
+    id: string;
+    formId: string;
+    mappingId: string;
+    value: string;
+  }[];
+}
 
 export const CheckUpForm = ({
   userId,
@@ -52,7 +79,34 @@ export const CheckUpForm = ({
   handleSubmit?: (values: CreateCheckUpDto) => Promise<void>;
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userForm, setUserForm] = useState<FormData | null>(null);
   const router = useRouter();
+
+  // Fetch the user's form on component mount
+  useEffect(() => {
+    const fetchUserForm = async () => {
+      setIsLoading(true);
+      try {
+        const response = await getUserForm(userId);
+        if (response.success) {
+          setUserForm(response.data);
+        } else {
+          // If the user doesn't have a form, that's fine
+          if (response.statusCode !== 404) {
+            toast.error(response.message);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user form:", error);
+        toast.error("Failed to fetch user form");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserForm();
+  }, [userId]);
 
   const form = useForm<CreateCheckUpDto>({
     resolver: zodResolver(createCheckUpDtoSchema),
@@ -137,6 +191,9 @@ export const CheckUpForm = ({
         if (!response.success) {
           throw new Error(response.message);
         }
+
+        // Set the user form to display the table
+        setUserForm(response.data);
 
         // Refresh the page to show the updated data
         router.refresh();
@@ -392,6 +449,67 @@ export const CheckUpForm = ({
     }
   };
 
+  // Function to render the form table
+  const renderFormTable = () => {
+    if (!userForm || !userForm.questions || userForm.questions.length === 0) {
+      return <div>No form data available</div>;
+    }
+
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">Your Check-up Form</h2>
+          <div className="flex items-center space-x-2">
+            <span className="text-sm font-medium">Status:</span>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              {userForm.status === "completed" ? "Completed" : userForm.status}
+            </span>
+          </div>
+        </div>
+
+        <Table>
+          <TableCaption>
+            Check-up form submitted on{" "}
+            {new Date(userForm.createdAt).toLocaleDateString()}
+          </TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[300px]">Question</TableHead>
+              <TableHead>Answer</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {userForm.questions.map((question) => {
+              // Find the mapping to get the field name
+              const mapping = ehr.mappings?.find(
+                (m) => m.id === question.mappingId
+              );
+              const fieldName = mapping?.fieldName || "Unknown Question";
+
+              return (
+                <TableRow key={question.id}>
+                  <TableCell className="font-medium">{fieldName}</TableCell>
+                  <TableCell>{question.value || "Not answered"}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  };
+
+  // Show loading state
+  if (isLoading) {
+    return <div className="flex justify-center p-8">Loading...</div>;
+  }
+
+  // If the user already has a form, display it in a table
+  if (userForm) {
+    return renderFormTable();
+  }
+
+  // Otherwise, display the form for the user to fill out
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
