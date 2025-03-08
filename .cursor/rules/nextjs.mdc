@@ -14,7 +14,7 @@ Key Principles
 - Structure files: exported component, subcomponents, helpers, static content, types.
 
 Naming Conventions
-- Use lowercase with dashes for directories (e.g., components/auth-wizard).
+- Use lowercase with dashes for directories and files (e.g., components/auth-wizard/auth-wizard.form,tsx).
 - Favor named exports for components.
 
 TypeScript Usage

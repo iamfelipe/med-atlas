@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn, formatDateToHumanReadable } from "@/lib/utils";
 import { getEhr } from "@/server/ehr/get-ehr";
+import { getUserForm } from "@/server/form/get-user-form";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -81,6 +82,79 @@ export const columns: ColumnDef<User>[] = [
           </Link>
         </Button>
       );
+    },
+  },
+  {
+    accessorKey: "form",
+    header: "Form",
+    cell: ({ row }) => {
+      const patient = row.original;
+      const [formStatus, setFormStatus] = useState<
+        "loading" | "needs_ehr" | "pending" | "completed"
+      >("loading");
+      const [formId, setFormId] = useState<string | null>(null);
+
+      useEffect(() => {
+        const fetchFormStatus = async () => {
+          // If no EHR is assigned, form status is "needs_ehr"
+          if (!patient.ehrId) {
+            setFormStatus("needs_ehr");
+            return;
+          }
+
+          try {
+            // Fetch the user's form
+            const response = await getUserForm(patient.id);
+
+            if (response.success && response.data) {
+              // Form exists, set status based on form status
+              setFormStatus(response.data.status);
+              setFormId(response.data.id);
+            } else {
+              // No form exists yet, status is "pending"
+              setFormStatus("pending");
+            }
+          } catch (error) {
+            console.error("Error fetching form status:", error);
+            setFormStatus("pending");
+          }
+        };
+
+        fetchFormStatus();
+      }, [patient.id, patient.ehrId]);
+
+      // If no EHR is assigned, show message that EHR needs to be assigned first
+      if (formStatus === "needs_ehr") {
+        return (
+          <div className="text-sm text-amber-600 font-medium">
+            EHR needs to be assigned first
+          </div>
+        );
+      }
+
+      // If loading, show loading state
+      if (formStatus === "loading") {
+        return <div className="text-sm text-gray-500">Loading...</div>;
+      }
+
+      // If form is completed, show "Completed" as a link to the form
+      if (formStatus === "completed" && formId) {
+        return (
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-green-600 border-green-600 hover:bg-green-50"
+            asChild
+          >
+            <Link href={`/dashboard/patient/${patient.id}/form/${formId}`}>
+              Completed
+            </Link>
+          </Button>
+        );
+      }
+
+      // Otherwise, show "Pending" status
+      return <div className="text-sm text-amber-600 font-medium">Pending</div>;
     },
   },
   {
