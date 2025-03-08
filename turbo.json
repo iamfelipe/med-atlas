@@ -27,6 +27,12 @@
       "dependsOn": ["^db:generate"],
       "cache": false,
       "persistent": true
+    },
+    "test": {
+      "outputs": []
+    },
+    "test:watch": {
+      "cache": false
     }
   }
 }
