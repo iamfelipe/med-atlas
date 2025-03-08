@@ -5,5 +5,12 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "^@repo/api/(.*)$": "<rootDir>/../../../packages/api/src/$1",
+    "^@repo/types/(.*)$": "<rootDir>/../../../packages/types/src/$1",
+    "^@repo/api$": "<rootDir>/../../../packages/api/src",
+    "^@repo/types$": "<rootDir>/../../../packages/types/src",
+    "^lib/(.*)$": "<rootDir>/../lib/$1"
   }
 }

@@ -25,6 +25,8 @@ model User {
 
   ehrId     String?
   ehr       EHR?        @relation("UserEHR", fields: [ehrId], references: [id], onDelete: SetNull)
+
+  form      Form?       @relation("UserForm")
 }
 
 model EHR {
@@ -34,6 +36,8 @@ model EHR {
   authType    String     // Ej: OAuth2, API_KEY
   mappings    EHRMapping[] // Ej: Patient, Appointment, etc.
   users       User[]     @relation("UserEHR")
+
+  forms       Form[]     @relation("EHRForms")
 }
 
 model EHRMapping {
@@ -47,9 +51,47 @@ model EHRMapping {
   required    Boolean  @default(true)
   apiEndpoint String  // Ej: /api/patient, /api/appointment
   options     String? // Ej: ["Option 1", "Option 2"] optional
+
+  // Relation to FormQuestions
+  formQuestions FormQuestion[]
 }
 
+model Form {
+  id          String        @id @default(uuid())
+  name        String
+  status      FormStatus    @default(pending)
 
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relation to User (a form is assigned to a user)
+  userId      String        @unique
+  user        User          @relation("UserForm", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relation to EHR (a form is associated with an EHR)
+  ehrId       String
+  ehr         EHR           @relation("EHRForms", fields: [ehrId], references: [id], onDelete: Cascade)
+
+  // Relation to FormQuestions (a form has many questions)
+  questions   FormQuestion[]
+}
+
+model FormQuestion {
+  id          String      @id @default(uuid())
+
+  // Relation to Form (a question belongs to a form)
+  formId      String
+  form        Form        @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  // Relation to EHRMapping (a question is associated with an EHR mapping)
+  mappingId   String
+  mapping     EHRMapping  @relation(fields: [mappingId], references: [id], onDelete: Cascade)
+
+  value       String?
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
 
 enum EHRDataType {
   string
@@ -60,5 +102,10 @@ enum EHRDataType {
   radio
   dropdown
   // TODO: Add email, phone
+}
+
+enum FormStatus {
+  pending
+  completed
 }
 
