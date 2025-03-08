@@ -11,8 +11,24 @@ module.exports = {
       },
     ],
   },
-  collectCoverageFrom: ['**/*.(t|j)s'],
+  collectCoverageFrom: [
+    'form/**/*.(t|j)s',
+    '!**/node_modules/**',
+    '!**/dist/**',
+    '!**/*.module.ts',
+    '!**/main.ts',
+    '!**/index.ts',
+  ],
   coverageDirectory: '../coverage',
+  coverageReporters: ['text', 'lcov', 'html'],
+  coverageThreshold: {
+    './src/form/**/*.ts': {
+      branches: 50,
+      functions: 90,
+      lines: 90,
+      statements: 90,
+    },
+  },
   testEnvironment: 'node',
   moduleNameMapper: {
     '^@repo/api/(.*)$': '<rootDir>/../../../packages/api/src/$1',
