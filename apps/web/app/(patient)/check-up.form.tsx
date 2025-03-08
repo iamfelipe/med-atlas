@@ -36,6 +36,8 @@ import { cn } from "@/lib/utils";
 import { EHRWithMappings } from "@repo/types";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const CheckUpForm = ({
   userId,
@@ -46,29 +48,90 @@ export const CheckUpForm = ({
   ehr: EHRWithMappings;
   handleSubmit?: (values: CreateCheckUpDto) => Promise<void>;
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<CreateCheckUpDto>({
     resolver: zodResolver(createCheckUpDtoSchema),
     defaultValues: {
+      status: "pending",
       questions:
         ehr.mappings?.map((mapping) => ({
           mappingId: mapping.id,
           name: mapping.fieldName,
           dataType: mapping.dataType,
           value: "",
+          options: mapping.options || undefined,
         })) ?? [],
     },
+    mode: "onChange", // Validate on change for immediate feedback
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields } = useFieldArray({
     control: form.control,
     name: "questions",
   });
 
+  // Validate required fields and set errors
+  const validateRequiredFields = (values: CreateCheckUpDto): boolean => {
+    // Get required mapping IDs
+    const requiredMappingIds =
+      ehr.mappings
+        ?.filter((mapping) => mapping.required)
+        .map((mapping) => mapping.id) || [];
+
+    let isValid = true;
+
+    // Check each question and set errors directly on the form
+    values.questions?.forEach((question, index) => {
+      if (
+        requiredMappingIds.includes(question.mappingId || "") &&
+        !question.value
+      ) {
+        form.setError(`questions.${index}.value`, {
+          type: "manual",
+          message: "This field is required",
+        });
+        isValid = false;
+      }
+    });
+
+    return isValid;
+  };
+
   async function onSubmit(values: CreateCheckUpDto) {
-    if (handleSubmit) {
-      await handleSubmit(values);
+    try {
+      // Clear previous errors
+      form.clearErrors();
+
+      // Validate required fields
+      const isValid = validateRequiredFields(values);
+      if (!isValid) {
+        return;
+      }
+
+      setIsSubmitting(true);
+
+      if (handleSubmit) {
+        await handleSubmit(values);
+      }
+
+      console.log({ userId, ehrId: ehr.id, questions: values.questions });
+
+      // Show success message
+      toast.success("Your check-up information has been saved.");
+
+      // Reset form if needed
+      // form.reset();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+
+      // Show error message
+      toast.error(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      );
+    } finally {
+      setIsSubmitting(false);
     }
-    console.log({ userId, ehrId: ehr.id, questions: values.questions });
   }
 
   // Function to render the appropriate input based on dataType
@@ -309,6 +372,13 @@ export const CheckUpForm = ({
           const dataType =
             form.getValues(`questions.${index}.dataType`) || "string";
           const fieldName = form.getValues(`questions.${index}.name`) || "";
+          const mappingId = form.getValues(
+            `questions.${index}.mappingId`
+          ) as string;
+          const isRequired = ehr.mappings?.find(
+            (m) => m.id === mappingId
+          )?.required;
+
           return (
             <div key={field.id} className="p-4 border rounded-md">
               <FormField
@@ -317,7 +387,8 @@ export const CheckUpForm = ({
                 render={({ field: valueField }) => (
                   <FormItem>
                     <FormLabel className="text-base font-medium">
-                      {fieldName}
+                      {fieldName}{" "}
+                      {isRequired && <span className="text-red-500">*</span>}
                     </FormLabel>
                     {renderFormControl(dataType, valueField, index)}
                     <FormMessage />
@@ -327,8 +398,8 @@ export const CheckUpForm = ({
             </div>
           );
         })}
-        <Button type="submit" className="w-full">
-          Submit
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? "Submitting..." : "Submit"}
         </Button>
       </form>
     </Form>
