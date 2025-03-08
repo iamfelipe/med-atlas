@@ -34,6 +34,24 @@ The Form module has excellent test coverage:
 | Functions  | 100%     |
 | Lines      | 100%     |
 
+# User Module
+
+## Test Coverage
+
+The User module has good test coverage:
+
+| Metric     | Coverage |
+| ---------- | -------- |
+| Statements | 74.11%   |
+| Branches   | 56%      |
+| Functions  | 88.23%   |
+| Lines      | 72.83%   |
+
+Areas for improvement:
+
+- User controller has 63.82% statement coverage and 41.17% branch coverage
+- User service has 86.84% statement coverage and 77.77% function coverage
+
 ### Running Tests
 
 ```bash
@@ -45,6 +63,9 @@ npm run test:cov
 
 # Run form-specific tests with coverage
 npm run test:cov:form
+
+# Run user-specific tests with coverage
+npm run test:cov:user
 
 # Run detailed coverage report
 npm run test:cov:detail
