@@ -106,7 +106,7 @@ export const columns: ColumnDef<User>[] = [
             // Fetch the user's form
             const response = await getUserForm(patient.id);
 
-            if (response.success && response.data) {
+            if (response.statusCode === 200) {
               // Form exists, set status based on form status
               setFormStatus(response.data.status);
               setFormId(response.data.id);

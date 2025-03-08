@@ -45,7 +45,7 @@ import {
 import { cn } from "@/lib/utils";
 import { createForm } from "@/server/form/create-form";
 import { getUserForm } from "@/server/form/get-user-form";
-import { EHRWithMappings } from "@repo/types";
+import { EHRWithMappings, FormWithQuestions } from "@repo/types";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -53,21 +53,6 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 // Define the form data type
-interface FormData {
-  id: string;
-  name: string;
-  status: string;
-  userId: string;
-  ehrId: string;
-  createdAt: string;
-  updatedAt: string;
-  questions: {
-    id: string;
-    formId: string;
-    mappingId: string;
-    value: string;
-  }[];
-}
 
 export const CheckUpForm = ({
   userId,
@@ -80,7 +65,7 @@ export const CheckUpForm = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [userForm, setUserForm] = useState<FormData | null>(null);
+  const [userForm, setUserForm] = useState<FormWithQuestions | null>(null);
   const router = useRouter();
 
   // Fetch the user's form on component mount
@@ -89,7 +74,8 @@ export const CheckUpForm = ({
       setIsLoading(true);
       try {
         const response = await getUserForm(userId);
-        if (response.success) {
+        console.log({ response });
+        if (response.statusCode === 200) {
           setUserForm(response.data);
         } else {
           // If the user doesn't have a form, that's fine

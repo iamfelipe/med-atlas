@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Form } from '@prisma/client';
 import { CreateFormDto } from '@repo/api/links/dto/create-form.dto';
 import { UpdateFormDto } from '@repo/api/links/dto/update-form.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -11,7 +12,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export class FormService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createFormDto: CreateFormDto) {
+  async create(createFormDto: CreateFormDto): Promise<Form | null> {
     // Check if user exists
     const user = await this.prisma.user.findUnique({
       where: { id: createFormDto.userId },
@@ -72,7 +73,7 @@ export class FormService {
     });
   }
 
-  async findAll() {
+  async findAll(): Promise<Form[]> {
     return this.prisma.form.findMany({
       include: {
         questions: true,
@@ -80,7 +81,7 @@ export class FormService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<Form | null> {
     const form = await this.prisma.form.findUnique({
       where: { id },
       include: {
@@ -95,7 +96,7 @@ export class FormService {
     return form;
   }
 
-  async findByUser(userId: string) {
+  async findByUser(userId: string): Promise<Form | null> {
     const form = await this.prisma.form.findUnique({
       where: { userId },
       include: {
@@ -110,7 +111,7 @@ export class FormService {
     return form;
   }
 
-  async update(id: string, updateFormDto: UpdateFormDto) {
+  async update(id: string, updateFormDto: UpdateFormDto): Promise<Form | null> {
     // Check if form exists
     const existingForm = await this.prisma.form.findUnique({
       where: { id },
@@ -162,7 +163,7 @@ export class FormService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<Form | null> {
     // Check if form exists
     const existingForm = await this.prisma.form.findUnique({
       where: { id },

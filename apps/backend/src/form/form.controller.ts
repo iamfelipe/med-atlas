@@ -6,15 +6,18 @@ import {
   Param,
   Patch,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateFormDto } from '@repo/api/links/dto/create-form.dto';
 import { UpdateFormDto } from '@repo/api/links/dto/update-form.dto';
 
+import { TransformInterceptor } from 'lib/response.interceptor';
 import { FormService } from './form.service';
 
 @ApiTags('forms')
 @Controller('forms')
+@UseInterceptors(TransformInterceptor)
 export class FormController {
   constructor(private readonly formService: FormService) {}
 
