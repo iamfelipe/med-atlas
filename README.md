@@ -1,195 +1,275 @@
-# Turborepo starter
+# Med Atlas
 
-This Turborepo starter is maintained by the Turborepo core team.
+Med Atlas is a comprehensive healthcare management system built with modern technologies. This project uses a monorepo architecture with Turborepo to manage multiple applications and packages.
 
-## Using this example
+## Technology Stack
 
-Run the following command:
+### Frontend (apps/web)
+
+- Next.js 15
+- React 19
+- Tailwind CSS
+- shadcn/ui (component library)
+- TypeScript
+- Zod (schema validation)
+
+### Backend (apps/backend)
+
+- NestJS 11
+- Node.js
+- Prisma ORM
+- PostgreSQL
+- Jest (testing)
+- Comprehensive unit and integration tests
 
 ```sh
-npx create-turbo@latest
+npx turbo test
 ```
 
-## What's inside?
+#### Backend Test Coverage
 
-This Turborepo includes the following packages/apps:
+The backend has extensive test coverage across all modules:
 
-### Apps and Packages
+![Backend Test Coverage](public/test-coverage.png)
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### Shared Packages (packages/\*)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- `api`: Contains DTOs and entities shared between frontend and backend
+- `types`: Contains simple TypeScript interfaces
+- `typescript-config`: Shared TypeScript configuration
+- `eslint-config`: Shared ESLint configuration
+- `ui`: Shared UI components
 
-### Utilities
+## Development Principles
 
-This Turborepo has some additional tools already setup for you:
+- Agile methodologies
+- SOLID principles
+- Clean architecture
+- Test-driven development
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## Getting Started
 
-### Build
+### Prerequisites
 
-To build all apps and packages, run the following command:
+- Node.js (v18 or higher)
+- npm (v11 or higher)
+- PostgreSQL (for local development)
+
+### Installation
+
+1. Clone the repository:
+
+   ```sh
+   git clone https://github.com/iamfelipe/med-atlas.git
+   cd med-atlas
+   ```
+
+2. Make sure you're on the main branch:
+
+   ```sh
+   git checkout main
+   ```
+
+3. Set up environment variables:
+
+   - Copy the `.env.example` files to `.env` in both the backend and web applications:
+     ```sh
+     cp apps/backend/.env.example apps/backend/.env
+     cp apps/web/.env.example apps/web/.env
+     ```
+
+4. Install dependencies:
+
+   ```sh
+   npm install
+   ```
+
+5. Generate Prisma client:
+   ```sh
+   npx turbo db:generate
+   ```
+
+### Running the Project
+
+Start the development servers:
+
+```sh
+npx turbo dev
+```
+
+This will start:
+
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5005
+
+### Available Scripts
+
+- `npm run build`: Build all applications and packages
+- `npm run dev`: Start all applications in development mode
+- `npm run lint`: Run linting on all applications and packages
+- `npm run format`: Format code using Prettier
+- `npm run check-types`: Check TypeScript types
+- `npm run test`: Run tests across all applications and packages
+
+### Backend-specific Commands
+
+- `npx turbo db:generate`: Generate Prisma client
+- `npx turbo db:migrate`: Run database migrations
+- `npx turbo db:studio`: Open Prisma Studio to manage database
+- `npx turbo test`: Run all tests (unit and integration)
+- `npx turbo test:cov`: Run tests with coverage reports
+- `npx turbo test:cov:detail`: Generate detailed coverage reports
+
+## Project Structure
 
 ```
-cd my-turborepo
-pnpm build
+med-atlas/
+├── apps/
+│   ├── backend/         # NestJS backend application
+│   └── web/             # Next.js frontend application
+├── packages/
+│   ├── api/             # Shared DTOs and entities
+│   ├── eslint-config/   # Shared ESLint configuration
+│   ├── typescript-config/ # Shared TypeScript configuration
+│   ├── types/           # Shared TypeScript interfaces
+│   └── ui/              # Shared UI components
+├── package.json         # Root package.json
+└── turbo.json           # Turborepo configuration
 ```
 
-### Develop
+## Features
 
-To develop all apps and packages, run the following command:
+The system manages:
 
-```
-cd my-turborepo
-pnpm dev
-```
+- User information (patients, administrators)
+- Electronic Health Records (EHR)
+- Form assignments and submissions
+- EHR field mappings
 
-### Remote Caching
+## Contributing
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+1. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Commit your changes (`git commit -m 'Add some amazing feature'`)
+3. Push to the branch (`git push origin feature/amazing-feature`)
+4. Open a Pull Request
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+## License
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+This project is licensed under the [MIT License](LICENSE).
 
-```
-cd my-turborepo
-npx turbo login
-```
+## System Functionality
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### Authentication and User Roles
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+When you first access the application, you'll need to create an account:
 
-```
-npx turbo link
-```
+- Sign up using your Google account or email and password (`http://localhost:3000/sign-up`)
+- Verify your email address for enhanced security
+- By default, new users are assigned the admin role and redirected to the dashboard
+- Users with the patient role are redirected to their checkup form if they have an EHR assigned
 
-## Useful Links
+### Admin Dashboard (`http://localhost:3000/dashboard`)
 
-Learn more about the power of Turborepo:
+The admin dashboard consists of three main sections:
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+#### 1. Users Management (`http://localhost:3000/dashboard/users`)
 
-# User Information, EHR, and Form Assignments
+- View all registered users
+- Edit user roles (admin/patient)
+- Delete users from the system
 
-## User Information
+#### 2. Patients Management (`http://localhost:3000/dashboard/patient`)
 
-### User Model
+- View all patients in the system
+- Assign an EHR to a patient
+- Monitor form completion status for patients with assigned EHRs
+- View patient details (`http://localhost:3000/dashboard/patient/[id]`)
+- Review form responses submitted by patients (`http://localhost:3000/dashboard/patient/[id]/form`)
 
-The system stores the following user information:
+#### 3. EHR Management (`http://localhost:3000/dashboard/ehr`)
 
-- **id**: Unique identifier
-- **email**: User's email address
-- **firstName**: User's first name
-- **lastName**: User's last name
-- **role**: User's role (default is "patient")
-- **createdAt**: When the user was created
-- **updatedAt**: When the user was last updated
-- **ehrId**: Optional reference to an assigned EHR
-- **form**: Optional reference to an assigned form
+- View all Electronic Health Record systems
+- Create new EHR configurations (`http://localhost:3000/dashboard/ehr/create`)
+- Update existing EHR configurations (`http://localhost:3000/dashboard/ehr/[id]`)
+- When updating an EHR, new fields are automatically added to forms assigned to users
 
-### User Endpoints
+#### Creating/Editing an EHR (`http://localhost:3000/dashboard/ehr/create` or `http://localhost:3000/dashboard/ehr/[id]`)
 
-- `GET /user`: Get all users
-- `GET /user/patient`: Get all patients
-- `GET /user/:id`: Get a specific user by ID
-- `POST /user`: Create a new user
-- `PUT /user/:id`: Update a user
-- `DELETE /user/:id`: Delete a user
-- `PATCH /user/:id/ehr`: Assign an EHR to a user
+When creating or editing an EHR, you can configure various field mappings:
 
-## EHR (Electronic Health Record)
+- Define field names and types (string, number, date, boolean, etc.)
+- Specify API endpoints for data retrieval
+- Configure mapping paths for data extraction
+- Set required fields
+- Add options for dropdown menus or multiple-choice selections
 
-### EHR Model
+### Patient Portal (`http://localhost:3000`)
 
-- **id**: Unique identifier
-- **name**: Name of the EHR system (e.g., Athena, Allscripts, Cerner)
-- **baseUrl**: Base URL for the EHR API
-- **authType**: Authentication type (e.g., OAuth2, API_KEY)
-- **mappings**: Array of field mappings
-- **users**: Array of users assigned to this EHR
-- **forms**: Array of forms associated with this EHR
+Patients with the patient role experience a different interface:
 
-### EHR Mapping Model
+- If an EHR is assigned, a form is automatically rendered for the patient to complete (`http://localhost:3000`)
+- After submission, the form status changes to "completed"
+- Patients can view their submitted responses
+- The system stores these responses for review by administrators
 
-- **id**: Unique identifier
-- **ehrId**: Reference to the parent EHR
-- **entityType**: Type of entity (e.g., Patient, Appointment)
-- **fieldName**: Name of the field in the EHR
-- **mappingPath**: Path to the field in the EHR API response
-- **dataType**: Data type (string, number, date, boolean, multiple, radio, dropdown)
-- **required**: Whether the field is required
-- **apiEndpoint**: API endpoint for the entity
-- **options**: Optional list of options for dropdown/radio fields
-- **formQuestions**: Array of form questions using this mapping
+### API Endpoints
 
-### EHR Endpoints
+The backend provides the following main API endpoints:
 
-- `GET /ehr`: Get all EHRs
-- `GET /ehr/:id`: Get a specific EHR by ID
-- `POST /ehr`: Create a new EHR
-- `PUT /ehr/:id`: Update an EHR
-- `DELETE /ehr/:id`: Delete an EHR
+#### User Endpoints
 
-## Form
+- `GET /user` - Get all users
+- `GET /user/patient` - Get all patients
+- `GET /user/:id` - Get a specific user by ID
+- `POST /user` - Create a new user
+- `PUT /user/:id` - Update a user
+- `DELETE /user/:id` - Delete a user
+- `PATCH /user/:id/ehr` - Assign an EHR to a user
 
-### Form Model
+#### EHR Endpoints
 
-- **id**: Unique identifier
-- **name**: Name of the form
-- **status**: Status of the form (pending or completed)
-- **createdAt**: When the form was created
-- **updatedAt**: When the form was last updated
-- **userId**: Reference to the user the form is assigned to
-- **ehrId**: Reference to the EHR the form is associated with
-- **questions**: Array of questions in the form
+- `GET /ehr` - Get all EHRs
+- `GET /ehr/:id` - Get a specific EHR by ID
+- `POST /ehr` - Create a new EHR
+- `PUT /ehr/:id` - Update an EHR
+- `DELETE /ehr/:id` - Delete an EHR
 
-### Form Question Model
+#### Form Endpoints
 
-- **id**: Unique identifier
-- **formId**: Reference to the parent form
-- **mappingId**: Reference to the EHR mapping
-- **value**: The user's response to the question
-- **createdAt**: When the question was created
-- **updatedAt**: When the question was last updated
+- `GET /form` - Get all forms
+- `GET /form/:id` - Get a specific form by ID
+- `GET /form/user/:userId` - Get a form for a specific user
+- `POST /form` - Create a new form
+- `PUT /form/:id` - Update a form
+- `DELETE /form/:id` - Delete a form
 
-### Form Endpoints
+This workflow enables efficient data collection from patients while providing administrators with tools to manage users, EHRs, and form submissions in a centralized system.
 
-- `GET /form`: Get all forms
-- `GET /form/:id`: Get a specific form by ID
-- `GET /form/user/:userId`: Get a form for a specific user
-- `POST /form`: Create a new form
-- `PUT /form/:id`: Update a form
-- `DELETE /form/:id`: Delete a form
+## Roadmap
 
-## Relationships
+The following features and improvements are planned for future development:
 
-- A user can be assigned one EHR
-- A user can have one form
-- An EHR can have multiple mappings
-- A form is associated with one EHR
-- A form has multiple questions
-- Each form question is associated with one EHR mapping
+### Security Enhancements
 
-## Frontend Display
+- Add service-level validation to ensure only users with appropriate permissions can make changes
+  - Example: Only users with `create:ehr` permission can create an EHR
+  - Patient users would have no `permission:ehr` capabilities
+- Protect frontend routes to restrict access based on user roles
+  - Currently, routes are open for testing purposes
 
-- The dashboard displays a list of patients
-- Each patient has a detail page showing their information
-- Patients can have forms assigned to them
-- Forms display questions based on the EHR mappings
-- Form responses are stored and can be viewed by administrators
+### Internationalization
 
-This system allows for managing patients, their electronic health records, and custom forms that map to fields in the EHR system. The forms can be filled out by patients and the data can be synchronized with the EHR system.
+- Add localization support for multiple languages
+- Implement language selection for users
+
+### Bulk Operations
+
+- Add functionality to handle bulk changes
+- Support CSV uploads for batch processing of user information and EHR data
+
+### Testing Improvements
+
+- Implement integration tests for the frontend
+- Add end-to-end (E2E) tests for the frontend
+- Increase test coverage across the application
+  - **Note**: The backend already has comprehensive unit and integration tests implemented with high coverage

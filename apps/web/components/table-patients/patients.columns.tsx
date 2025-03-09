@@ -185,15 +185,6 @@ export const columns: ColumnDef<User>[] = [
             >
               Edit
             </DropdownMenuItem>
-
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={async () => {
-                console.log("delete patient");
-              }}
-            >
-              Delete
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
