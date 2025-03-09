@@ -163,13 +163,37 @@ export class UserService {
     });
   }
 
-  async deleteUser(id: string): Promise<User | null> {
+  async deleteUserFromKinde(id: string) {
+    const deleteResponse = await fetch(
+      `${process.env.KINDE_API_URL}/user?id=${id}&is_deleted_profile=true`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.KINDE_AUTHORIZATION}`,
+          Connection: 'keep-alive',
+        },
+      },
+    );
+
+    return await deleteResponse.json();
+  }
+
+  async deleteUser(id: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: { id },
     });
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    try {
+      const deletedUser = await this.deleteUserFromKinde(id);
+      console.log('deletedUser', deletedUser);
+    } catch (error) {
+      console.error('Error deleting user from Kinde:', error);
+      throw new Error(`Failed to delete user from Kinde: ${error.message}`);
     }
 
     return this.prisma.user.delete({

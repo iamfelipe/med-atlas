@@ -10,10 +10,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getRoles } from "@/server/user/get-roles";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { DeleteUser } from "./delete-user";
 import { RoleDropdown } from "./role-dropdown";
 
 export default async function UsersPage() {
+  const { getUser: getUserFromKinde } = getKindeServerSession();
+  const { id: userId } = await getUserFromKinde();
   const { data: users } = await getUsers();
+
   const roles = await getRoles();
 
   return (
@@ -43,7 +48,7 @@ export default async function UsersPage() {
                 />
               </TableCell>
               <TableCell>
-                {/* Removed the Change role button since we now have the dropdown */}
+                <DeleteUser userId={user.id} currentUserId={userId} />
               </TableCell>
             </TableRow>
           ))}

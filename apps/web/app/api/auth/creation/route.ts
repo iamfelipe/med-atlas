@@ -36,6 +36,8 @@ export async function GET() {
 
   await createUser(userDetails);
 
+  console.log({ userDetails, roles });
+
   const redirectUrl = roles?.some((role) => role.key === RoleType.PATIENT)
     ? `${process.env.NEXT_PUBLIC_APP_URL}/`
     : `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`;

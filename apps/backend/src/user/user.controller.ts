@@ -76,7 +76,7 @@ export class UserController {
     }
   }
 
-  @Post(':id/role')
+  @Put(':id/role')
   @ResponseMessage('User role updated successfully')
   async updateRole(
     @Param('id') id: string,
