@@ -17,62 +17,62 @@ The patient will be answering questions that the clinical team has set up for th
 
 ### API Requirements
 
-1. **Data Mapping Method**
+1. **Data Mapping Method** [ ]
 
    - Implement a method to map input data received from users to appropriate fields in EHR systems
    - Method should be flexible to handle different types of input data and EHR systems
 
-2. **Transaction Management**
+2. **Transaction Management** [ ]
 
    - Implement a method to ensure transactions are written to the correct users in EHRs
    - Include validation checks and error handling
 
-3. **EHR Integration Design**
+3. **EHR Integration Design** [ ]
 
    - Design API to allow addition of more EHR integrations without significant code changes
    - Consider modular design or standard interface for EHR integrations
 
-4. **Scalability Planning**
+4. **Scalability Planning** [ ]
 
    - Describe and plan an API design for scalability as user base grows
    - Consider efficient data structures, load balancing, and other scaling techniques
 
-5. **Mapping Management System**
+5. **Mapping Management System** [ ]
 
    - Implement a system for managing mappings for each EHR integration
    - Options include storing mappings in database or configuration files
    - Provide methods for updating and retrieving mappings
 
-6. **Performance Optimization**
+6. **Performance Optimization** [ ]
 
    - Implement performance measures for system scalability
    - Consider techniques like caching and efficient data structures
 
-7. **Testing Strategy**
+7. **Testing Strategy** [ ]
 
    - Design a comprehensive testing approach for the API
    - _Bonus_: Implement the testing strategy if time permits
 
-8. **Bonus Features**
+8. **Bonus Features** [ ]
    - Support multi-language (questions and answers in Spanish and English)
 
 ### Frontend Requirements
 
-1. **Mapping Management Tool**
+1. **Mapping Management Tool** [ ]
 
    - Create an internal tool for team members to modify EHR mappings
 
-2. **Error Handling**
+2. **Error Handling** [ ]
 
    - Implement robust error handling and exception management
    - Validate and manage user inputs
 
-3. **Testing Strategy**
+3. **Testing Strategy** [ ]
 
    - Plan a testing approach for the frontend application
    - _Bonus_: Implement the testing strategy if time permits
 
-4. **Bonus Features**
+4. **Bonus Features** [ ]
    - Support multi-language interface
    - Enable bulk patient changes for specific providers or hospitals
 
