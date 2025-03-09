@@ -7,7 +7,6 @@ import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -41,10 +40,10 @@ export async function UserNav() {
             </p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>Account</DropdownMenuItem>
-          {/* <DropdownMenuItem>
+        {/* <DropdownMenuSeparator /> */}
+        {/* <DropdownMenuGroup> */}
+        {/* <DropdownMenuItem>Account</DropdownMenuItem> */}
+        {/* <DropdownMenuItem>
             Billing
             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
           </DropdownMenuItem>
@@ -53,7 +52,7 @@ export async function UserNav() {
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>New Team</DropdownMenuItem> */}
-        </DropdownMenuGroup>
+        {/* </DropdownMenuGroup> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <LogoutLink>Log out</LogoutLink>
