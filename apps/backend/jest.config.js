@@ -14,6 +14,7 @@ module.exports = {
   collectCoverageFrom: [
     'form/**/*.(t|j)s',
     'user/**/*.(t|j)s',
+    'ehr/**/*.(t|j)s',
     '!**/node_modules/**',
     '!**/dist/**',
     '!**/*.module.ts',
@@ -30,6 +31,12 @@ module.exports = {
       statements: 90,
     },
     './src/user/**/*.ts': {
+      branches: 50,
+      functions: 90,
+      lines: 90,
+      statements: 90,
+    },
+    './src/ehr/**/*.ts': {
       branches: 50,
       functions: 90,
       lines: 90,
