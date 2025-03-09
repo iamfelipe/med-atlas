@@ -6,6 +6,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import { EhrController } from './ehr.controller';
 import { EhrService } from './ehr.service';
 
+// Import the EHRDataType enum from Prisma
+import { EHRDataType } from '@prisma/client';
+
 describe('EhrController', () => {
   let controller: EhrController;
   let service: EhrService;
@@ -25,9 +28,10 @@ describe('EhrController', () => {
         entityType: 'Patient',
         fieldName: 'Name',
         mappingPath: 'patient.name',
-        dataType: 'string',
+        dataType: EHRDataType.string,
         required: true,
         apiEndpoint: '/api/patient',
+        options: null,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -59,11 +63,13 @@ describe('EhrController', () => {
         dataType: 'string',
         required: true,
         apiEndpoint: '/api/patient',
+        options: undefined,
       },
     ],
   };
 
   const mockUpdateEhrDto: UpdateEhrDto = {
+    id: 'ehr-id-1',
     name: 'Updated EHR',
     baseUrl: 'https://updated-ehr.com',
     authType: 'API_KEY',
@@ -76,6 +82,7 @@ describe('EhrController', () => {
         dataType: 'string',
         required: true,
         apiEndpoint: '/api/patient/updated',
+        options: undefined,
       },
     ],
   };
