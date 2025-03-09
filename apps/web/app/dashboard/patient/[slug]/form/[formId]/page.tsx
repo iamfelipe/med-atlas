@@ -9,55 +9,39 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useGetEhr } from "@/hooks/ehr/use-get-ehr";
+import { useGetUser } from "@/hooks/user/use-get-user";
+import { useGetUserForm } from "@/hooks/user/use-get-user-form";
 import { formatDateToHumanReadable } from "@/lib/utils";
-import { getEhr } from "@/server/ehr/get-ehr";
-import { getUserForm } from "@/server/form/get-user-form";
-import { getUser } from "@/server/users";
 import { FormQuestion } from "@prisma/client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-// Define the FormQuestion type based on the schema
-
 export default async function PatientFormPage({
   params,
 }: {
-  params: { slug: string; formId: string };
+  params: Promise<{ slug: string; formId: string }>;
 }) {
-  // Fetch the user, form, and EHR data
-  const { data: user } = await getUser(params.slug);
-
-  if (!user) {
-    notFound();
-  }
-
-  const formResponse = await getUserForm(params.slug);
-
-  if (formResponse.statusCode !== 200 || !formResponse.data) {
-    notFound();
-  }
-
-  const form = formResponse.data;
+  const { slug, formId } = await params;
+  const user = await useGetUser(slug);
+  const form = await useGetUserForm(slug);
 
   // Verify that the form ID matches the requested form ID
-  if (form.id !== params.formId) {
+  if (form.id !== formId) {
     notFound();
   }
 
   // Fetch the EHR to get mapping information
-  const ehrResponse = await getEhr(form.ehrId);
-  const ehr = ehrResponse.data;
+  const ehr = await useGetEhr(form.ehrId);
 
   return (
     <div className="space-y-6">
       <AppHeader
-        title={`${user.firstName} ${user.lastName}'s Form`}
+        title={`${user.firstName} ${user.lastName}'s check-up form`}
         subtitle={`Form submitted on ${formatDateToHumanReadable(new Date(form.createdAt))}`}
       >
         <Button variant="outline" asChild>
-          <Link href={`/dashboard/patient/${params.slug}`}>
-            Back to Patient
-          </Link>
+          <Link href={`/dashboard/patient/${slug}`}>Back to Patient</Link>
         </Button>
       </AppHeader>
 
