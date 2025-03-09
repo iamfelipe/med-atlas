@@ -190,7 +190,6 @@ export class UserService {
 
     try {
       const deletedUser = await this.deleteUserFromKinde(id);
-      console.log('deletedUser', deletedUser);
     } catch (error) {
       console.error('Error deleting user from Kinde:', error);
       throw new Error(`Failed to delete user from Kinde: ${error.message}`);
