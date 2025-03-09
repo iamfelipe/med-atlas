@@ -1,21 +1,37 @@
 import { AppHeader } from "@/components/app-header";
+import { CheckUpTable } from "@/components/table-check-up/check-up.table";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useGetEhr } from "@/hooks/ehr/use-get-ehr";
 import { useGetUser } from "@/hooks/user/use-get-user";
 import { useGetUserForm } from "@/hooks/user/use-get-user-form";
 import { formatDateToHumanReadable } from "@/lib/utils";
-import { FormQuestion } from "@prisma/client";
+import { EHRMapping } from "@prisma/client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+const formatCheckUpValue = (
+  value: string,
+  dataType: EHRMapping["dataType"]
+) => {
+  switch (dataType) {
+    case "date":
+      return formatDateToHumanReadable(new Date(value));
+    case "string":
+      return value;
+    case "number":
+      return value;
+    case "boolean":
+      return value;
+    case "radio":
+      return value;
+    case "dropdown":
+      return value;
+    case "multiple":
+      return value;
+    default:
+      return value;
+  }
+};
 
 export default async function PatientFormPage({
   params,
@@ -45,36 +61,8 @@ export default async function PatientFormPage({
         </Button>
       </AppHeader>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableCaption>
-            Form Status:{" "}
-            <span className="font-medium text-green-600">{form.status}</span>
-          </TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[300px]">Field</TableHead>
-              <TableHead>Value</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {form.questions.map((question: FormQuestion) => {
-              // Find the mapping to get the field name
-              const mapping = ehr.mappings?.find(
-                (m) => m.id === question.mappingId
-              );
-              const fieldName = mapping?.fieldName || "Unknown Field";
-
-              return (
-                <TableRow key={question.id}>
-                  <TableCell className="font-medium">{fieldName}</TableCell>
-                  <TableCell>{question.value || "Not provided"}</TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
+      {/* Display form questions */}
+      <CheckUpTable userForm={form} ehr={ehr} />
     </div>
   );
 }

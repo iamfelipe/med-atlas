@@ -86,7 +86,7 @@ export const columns: ColumnDef<User>[] = [
   },
   {
     accessorKey: "form",
-    header: "Form",
+    header: "Check-up form",
     cell: ({ row }) => {
       const patient = row.original;
       const [formStatus, setFormStatus] = useState<
@@ -143,7 +143,7 @@ export const columns: ColumnDef<User>[] = [
           <Button
             variant="outline"
             size="sm"
-            className="text-green-600 border-green-600 hover:bg-green-50"
+            className="text-green-600 border-green-600 hover:bg-green-50 hover:text-green-600"
             asChild
           >
             <Link href={`/dashboard/patient/${patient.id}/form/${formId}`}>
