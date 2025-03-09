@@ -201,6 +201,12 @@ describe('EhrService', () => {
       expect(prismaService.eHR.findMany).toHaveBeenCalledWith({
         include: {
           mappings: true,
+          _count: {
+            select: {
+              users: true,
+              forms: true,
+            },
+          },
         },
       });
       expect(result).toEqual(mockEHRsWithMappings);
@@ -214,6 +220,12 @@ describe('EhrService', () => {
       expect(prismaService.eHR.findMany).toHaveBeenCalledWith({
         include: {
           mappings: false,
+          _count: {
+            select: {
+              users: true,
+              forms: true,
+            },
+          },
         },
       });
       expect(result).toEqual(mockEHRs);
@@ -232,6 +244,12 @@ describe('EhrService', () => {
         where: { id: 'ehr-id-1' },
         include: {
           mappings: true,
+          _count: {
+            select: {
+              users: true,
+              forms: true,
+            },
+          },
         },
       });
       expect(result).toEqual(mockEHRWithMappings);
@@ -284,6 +302,12 @@ describe('EhrService', () => {
           where: { id: 'ehr-id-1' },
           include: {
             mappings: true,
+            _count: {
+              select: {
+                users: true,
+                forms: true,
+              },
+            },
           },
         }),
       );
@@ -327,6 +351,12 @@ describe('EhrService', () => {
         where: { id: 'ehr-id-1' },
         include: {
           mappings: true,
+          _count: {
+            select: {
+              users: true,
+              forms: true,
+            },
+          },
         },
       });
       expect(result).toEqual(mockEHRWithMappings);
