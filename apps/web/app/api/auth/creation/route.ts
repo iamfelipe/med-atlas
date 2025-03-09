@@ -26,7 +26,7 @@ function extractUserDetails(user: any, roles: KindeRole[] | undefined) {
     firstName: user.given_name || "",
     lastName: user.family_name || "",
     email: user.email || "",
-    role: roles?.map(({ key }) => key).join(",") || "patient",
+    role: roles?.map(({ id }) => id).join(",") || "",
   };
 }
 

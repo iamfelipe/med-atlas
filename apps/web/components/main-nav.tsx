@@ -34,6 +34,7 @@ export function MainNav({
       className={cn("flex items-center space-x-4 lg:space-x-6", className)}
       {...props}
     >
+      <NavLink href="/dashboard/users">Users</NavLink>
       <NavLink href="/dashboard/patient">Patients</NavLink>
       <NavLink href="/dashboard/ehr">EHRs</NavLink>
     </nav>

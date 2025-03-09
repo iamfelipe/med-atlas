@@ -76,6 +76,22 @@ export class UserController {
     }
   }
 
+  @Put(':id/role')
+  @ResponseMessage('User role updated successfully')
+  async updateRole(
+    @Param('id') id: string,
+    @Body() updateRoleDto: { role: string },
+  ) {
+    try {
+      return this.userService.updateUserRole(id, updateRoleDto.role);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      }
+      throw new BadRequestException(error.message as string);
+    }
+  }
+
   @Patch(':id/ehr')
   @ResponseMessage('EHR assigned to user successfully')
   async assignEhrToUser(

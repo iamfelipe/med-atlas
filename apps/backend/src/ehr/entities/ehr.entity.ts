@@ -2,7 +2,7 @@ import { EHR, EHRMapping } from '@prisma/client';
 
 export interface EHRWithMappings extends EHR {
   mappings: EHRMapping[];
-  _count?: {
+  _count: {
     users: number;
     forms: number;
   };
