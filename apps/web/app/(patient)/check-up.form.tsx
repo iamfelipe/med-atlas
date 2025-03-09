@@ -66,12 +66,9 @@ export const CheckUpForm = ({
     const fetchUserForm = async () => {
       setIsLoading(true);
       try {
-        console.log("Fetching user form for userId:", userId);
         const response = await getUserForm(userId);
-        console.log("User form response:", response);
 
         if (response.statusCode === 200) {
-          console.log("Setting userForm from API response:", response.data);
           setUserForm(response.data);
         } else {
           // If the user doesn't have a form, that's fine
@@ -171,8 +168,6 @@ export const CheckUpForm = ({
 
         const response = await createForm(formData);
 
-        console.log("Form creation response:", response);
-
         if (!response.success) {
           throw new Error(response.message);
         }
@@ -181,11 +176,9 @@ export const CheckUpForm = ({
         toast.success("Your check-up information has been saved.");
 
         // Instead of directly setting the userForm state, trigger a re-fetch
-        console.log("Triggering re-fetch of user form data");
+
         setForceUpdate((prev) => prev + 1);
       }
-
-      console.log({ userId, ehrId: ehr.id, questions: values.questions });
     } catch (error) {
       console.error("Error submitting form:", error);
 
@@ -442,7 +435,6 @@ export const CheckUpForm = ({
 
   // If the user already has a form, display it in a table
   if (userForm && userForm.questions && userForm.questions.length > 0) {
-    console.log("Rendering CheckUpTable with userForm:", userForm);
     return <CheckUpTable userForm={userForm} ehr={ehr} />;
   }
 

@@ -176,6 +176,13 @@ export const columns: ColumnDef<User>[] = [
                 router.push(`/dashboard/patient/${ehr.id}`);
               }}
             >
+              View
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                router.push(`/dashboard/patient/${ehr.id}`);
+              }}
+            >
               Edit
             </DropdownMenuItem>
 

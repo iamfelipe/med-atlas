@@ -82,3 +82,114 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
 - [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
 - [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+
+# User Information, EHR, and Form Assignments
+
+## User Information
+
+### User Model
+
+The system stores the following user information:
+
+- **id**: Unique identifier
+- **email**: User's email address
+- **firstName**: User's first name
+- **lastName**: User's last name
+- **role**: User's role (default is "patient")
+- **createdAt**: When the user was created
+- **updatedAt**: When the user was last updated
+- **ehrId**: Optional reference to an assigned EHR
+- **form**: Optional reference to an assigned form
+
+### User Endpoints
+
+- `GET /user`: Get all users
+- `GET /user/patient`: Get all patients
+- `GET /user/:id`: Get a specific user by ID
+- `POST /user`: Create a new user
+- `PUT /user/:id`: Update a user
+- `DELETE /user/:id`: Delete a user
+- `PATCH /user/:id/ehr`: Assign an EHR to a user
+
+## EHR (Electronic Health Record)
+
+### EHR Model
+
+- **id**: Unique identifier
+- **name**: Name of the EHR system (e.g., Athena, Allscripts, Cerner)
+- **baseUrl**: Base URL for the EHR API
+- **authType**: Authentication type (e.g., OAuth2, API_KEY)
+- **mappings**: Array of field mappings
+- **users**: Array of users assigned to this EHR
+- **forms**: Array of forms associated with this EHR
+
+### EHR Mapping Model
+
+- **id**: Unique identifier
+- **ehrId**: Reference to the parent EHR
+- **entityType**: Type of entity (e.g., Patient, Appointment)
+- **fieldName**: Name of the field in the EHR
+- **mappingPath**: Path to the field in the EHR API response
+- **dataType**: Data type (string, number, date, boolean, multiple, radio, dropdown)
+- **required**: Whether the field is required
+- **apiEndpoint**: API endpoint for the entity
+- **options**: Optional list of options for dropdown/radio fields
+- **formQuestions**: Array of form questions using this mapping
+
+### EHR Endpoints
+
+- `GET /ehr`: Get all EHRs
+- `GET /ehr/:id`: Get a specific EHR by ID
+- `POST /ehr`: Create a new EHR
+- `PUT /ehr/:id`: Update an EHR
+- `DELETE /ehr/:id`: Delete an EHR
+
+## Form
+
+### Form Model
+
+- **id**: Unique identifier
+- **name**: Name of the form
+- **status**: Status of the form (pending or completed)
+- **createdAt**: When the form was created
+- **updatedAt**: When the form was last updated
+- **userId**: Reference to the user the form is assigned to
+- **ehrId**: Reference to the EHR the form is associated with
+- **questions**: Array of questions in the form
+
+### Form Question Model
+
+- **id**: Unique identifier
+- **formId**: Reference to the parent form
+- **mappingId**: Reference to the EHR mapping
+- **value**: The user's response to the question
+- **createdAt**: When the question was created
+- **updatedAt**: When the question was last updated
+
+### Form Endpoints
+
+- `GET /form`: Get all forms
+- `GET /form/:id`: Get a specific form by ID
+- `GET /form/user/:userId`: Get a form for a specific user
+- `POST /form`: Create a new form
+- `PUT /form/:id`: Update a form
+- `DELETE /form/:id`: Delete a form
+
+## Relationships
+
+- A user can be assigned one EHR
+- A user can have one form
+- An EHR can have multiple mappings
+- A form is associated with one EHR
+- A form has multiple questions
+- Each form question is associated with one EHR mapping
+
+## Frontend Display
+
+- The dashboard displays a list of patients
+- Each patient has a detail page showing their information
+- Patients can have forms assigned to them
+- Forms display questions based on the EHR mappings
+- Form responses are stored and can be viewed by administrators
+
+This system allows for managing patients, their electronic health records, and custom forms that map to fields in the EHR system. The forms can be filled out by patients and the data can be synchronized with the EHR system.
