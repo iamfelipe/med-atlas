@@ -27,6 +27,9 @@ out/
 build
 dist
 
+# Cursor
+.cursor
+.vscode
 
 # Debug
 npm-debug.log*
