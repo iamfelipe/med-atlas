@@ -54,6 +54,15 @@ export const columns: ColumnDef<EHRWithMappings>[] = [
     },
   },
   {
+    accessorKey: "users",
+    header: "Users",
+    cell: ({ row }) => {
+      const ehr = row.original;
+      const usersTotal = "TODO";
+      return usersTotal;
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       const router = useRouter();
