@@ -76,14 +76,18 @@ export class UserController {
     }
   }
 
-  @Put(':id/role')
+  @Post(':id/role')
   @ResponseMessage('User role updated successfully')
   async updateRole(
     @Param('id') id: string,
-    @Body() updateRoleDto: { role: string },
+    @Body() updateRoleDto: { roleId: string; currentRoleId: string },
   ) {
     try {
-      return this.userService.updateUserRole(id, updateRoleDto.role);
+      return this.userService.updateUserRole(
+        id,
+        updateRoleDto.roleId,
+        updateRoleDto.currentRoleId,
+      );
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);

@@ -1,7 +1,6 @@
 import { AppHeader } from "@/components/app-header";
 import { getUsers } from "@/server/users";
 
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -11,12 +10,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getRoles } from "@/server/user/get-roles";
+import { RoleDropdown } from "./role-dropdown";
 
 export default async function UsersPage() {
   const { data: users } = await getUsers();
-  const response = await getRoles();
+  const roles = await getRoles();
 
-  console.log(response.map((role) => role.key));
   return (
     <>
       <AppHeader title="Users" />
@@ -37,12 +36,14 @@ export default async function UsersPage() {
               <TableCell>{user.lastName}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>
-                {response.find((role) => role.id === user.role)?.key}
+                <RoleDropdown
+                  userId={user.id}
+                  currentRoleId={user.role}
+                  roles={roles}
+                />
               </TableCell>
               <TableCell>
-                <Button variant="outline" size="sm">
-                  Change role
-                </Button>
+                {/* Removed the Change role button since we now have the dropdown */}
               </TableCell>
             </TableRow>
           ))}

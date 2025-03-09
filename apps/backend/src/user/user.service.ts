@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaClient, User } from '@prisma/client';
+import fetch from 'node-fetch';
 
 @Injectable()
 export class UserService {
@@ -80,14 +81,59 @@ export class UserService {
     });
   }
 
-  async updateUserRole(id: string, role: string): Promise<User | null> {
+  async deleteUserRole(id: string, currentRoleId: string) {
+    const deleteResponse = await fetch(
+      `${process.env.KINDE_API_URL}/organizations/${process.env.KINDE_ORGANIZATION}/users/${id}/roles/${currentRoleId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.KINDE_AUTHORIZATION}`,
+          Connection: 'keep-alive',
+        },
+      },
+    );
+    return await deleteResponse.json();
+  }
+
+  async addUserRole(id: string, roleId: string) {
+    const addResponse = await fetch(
+      `${process.env.KINDE_API_URL}/organizations/${process.env.KINDE_ORGANIZATION}/users/${id}/roles`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.KINDE_AUTHORIZATION}`,
+          Connection: 'keep-alive',
+        },
+        body: JSON.stringify({ role_id: roleId }),
+      },
+    );
+    return await addResponse.json();
+  }
+
+  async updateUserRole(
+    id: string,
+    roleId: string,
+    currentRoleId: string,
+  ): Promise<User | null> {
     if (!(await this.checkUserExists(id))) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
+    try {
+      await this.deleteUserRole(id, currentRoleId);
+
+      await this.addUserRole(id, roleId);
+    } catch (error) {
+      console.error('Error updating role in Kinde:', error);
+      throw new Error(`Failed to update role in Kinde: ${error.message}`);
+    }
+
+    // Then update the role in our database
     return this.prisma.user.update({
       where: { id },
-      data: { role },
+      data: { role: roleId },
     });
   }
 
