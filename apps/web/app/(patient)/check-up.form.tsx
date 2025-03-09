@@ -58,16 +58,20 @@ export const CheckUpForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userForm, setUserForm] = useState<FormWithQuestions | null>(null);
+  const [forceUpdate, setForceUpdate] = useState(0);
   const router = useRouter();
 
-  // Fetch the user's form on component mount
+  // Fetch the user's form on component mount or when forceUpdate changes
   useEffect(() => {
     const fetchUserForm = async () => {
       setIsLoading(true);
       try {
+        console.log("Fetching user form for userId:", userId);
         const response = await getUserForm(userId);
-        console.log({ response });
+        console.log("User form response:", response);
+
         if (response.statusCode === 200) {
+          console.log("Setting userForm from API response:", response.data);
           setUserForm(response.data);
         } else {
           // If the user doesn't have a form, that's fine
@@ -84,7 +88,7 @@ export const CheckUpForm = ({
     };
 
     fetchUserForm();
-  }, [userId]);
+  }, [userId, forceUpdate]);
 
   const form = useForm<CreateCheckUpDto>({
     resolver: zodResolver(createCheckUpDtoSchema),
@@ -146,6 +150,7 @@ export const CheckUpForm = ({
       }
 
       setIsSubmitting(true);
+      setIsLoading(true); // Set loading state to true during submission
 
       // If custom handler is provided, use it
       if (handleSubmit) {
@@ -166,24 +171,21 @@ export const CheckUpForm = ({
 
         const response = await createForm(formData);
 
+        console.log("Form creation response:", response);
+
         if (!response.success) {
           throw new Error(response.message);
         }
 
-        // Set the user form to display the table
-        setUserForm(response.data);
+        // Show success message
+        toast.success("Your check-up information has been saved.");
 
-        // Refresh the page to show the updated data
-        router.refresh();
+        // Instead of directly setting the userForm state, trigger a re-fetch
+        console.log("Triggering re-fetch of user form data");
+        setForceUpdate((prev) => prev + 1);
       }
 
       console.log({ userId, ehrId: ehr.id, questions: values.questions });
-
-      // Show success message
-      toast.success("Your check-up information has been saved.");
-
-      // Reset form if needed
-      // form.reset();
     } catch (error) {
       console.error("Error submitting form:", error);
 
@@ -193,6 +195,7 @@ export const CheckUpForm = ({
       );
     } finally {
       setIsSubmitting(false);
+      setIsLoading(false);
     }
   }
 
@@ -429,11 +432,17 @@ export const CheckUpForm = ({
 
   // Show loading state
   if (isLoading) {
-    return <div className="flex justify-center p-8">Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
+        <p className="text-lg font-medium">Loading form data...</p>
+      </div>
+    );
   }
 
   // If the user already has a form, display it in a table
-  if (userForm) {
+  if (userForm && userForm.questions && userForm.questions.length > 0) {
+    console.log("Rendering CheckUpTable with userForm:", userForm);
     return <CheckUpTable userForm={userForm} ehr={ehr} />;
   }
 

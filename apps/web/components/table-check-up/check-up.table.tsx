@@ -45,8 +45,19 @@ export const CheckUpTable = ({
   ehr: EHRWithMappings;
 }) => {
   if (!userForm || !userForm.questions || userForm.questions.length === 0) {
-    return <div>No form data available</div>;
+    return (
+      <div className="p-6 text-center">
+        <p className="text-lg font-medium text-gray-600">
+          No form data available
+        </p>
+        <p className="text-sm text-gray-500 mt-2">
+          There seems to be an issue with the form data. Please try again.
+        </p>
+      </div>
+    );
   }
+
+  console.log("Rendering CheckUpTable with data:", userForm);
 
   return (
     <div className="space-y-6">

@@ -17,17 +17,17 @@ The patient will be answering questions that the clinical team has set up for th
 
 ### API Requirements
 
-1. **Data Mapping Method** [ ]
+1. **Data Mapping Method** [X]
 
    - Implement a method to map input data received from users to appropriate fields in EHR systems
    - Method should be flexible to handle different types of input data and EHR systems
 
-2. **Transaction Management** [ ]
+2. **Transaction Management** [X]
 
    - Implement a method to ensure transactions are written to the correct users in EHRs
    - Include validation checks and error handling
 
-3. **EHR Integration Design** [ ]
+3. **EHR Integration Design** [X]
 
    - Design API to allow addition of more EHR integrations without significant code changes
    - Consider modular design or standard interface for EHR integrations

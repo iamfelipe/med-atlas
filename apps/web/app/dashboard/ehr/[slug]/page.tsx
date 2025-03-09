@@ -1,4 +1,8 @@
+import { AppHeader } from "@/components/app-header";
+import { Button } from "@/components/ui/button";
 import { getEhr } from "@/server/ehr/get-ehr";
+import Link from "next/link";
+import { EHRDetailView } from "./ehr-detail-view";
 
 export default async function EHRDetailPage({
   params,
@@ -10,10 +14,13 @@ export default async function EHRDetailPage({
 
   return (
     <>
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">View</h2>
-      </div>
-      <pre>{JSON.stringify(ehr, null, 2)}</pre>
+      <AppHeader title={`${ehr.name} Details`}>
+        <Button variant="outline" asChild>
+          <Link href={`/dashboard/ehr/${id}/edit`}>Edit EHR</Link>
+        </Button>
+      </AppHeader>
+
+      <EHRDetailView ehr={ehr} />
     </>
   );
 }

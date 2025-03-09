@@ -163,7 +163,7 @@ export class FormService {
     });
   }
 
-  async remove(id: string): Promise<Form | null> {
+  async remove(id: string) {
     // Check if form exists
     const existingForm = await this.prisma.form.findUnique({
       where: { id },
