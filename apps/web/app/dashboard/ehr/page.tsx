@@ -30,6 +30,7 @@ export default async function EHRPage() {
           </Button>
         </div>
       </div>
+
       <DataTable columns={columns} data={ehrList} />
     </>
   );

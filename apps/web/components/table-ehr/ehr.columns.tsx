@@ -58,8 +58,17 @@ export const columns: ColumnDef<EHRWithMappings>[] = [
     header: "Users",
     cell: ({ row }) => {
       const ehr = row.original;
-      const usersTotal = "TODO";
+      const usersTotal = ehr._count.users;
       return usersTotal;
+    },
+  },
+  {
+    accessorKey: "forms",
+    header: "Forms",
+    cell: ({ row }) => {
+      const ehr = row.original;
+      const formsTotal = ehr._count.forms;
+      return formsTotal;
     },
   },
   {

@@ -50,6 +50,12 @@ export class EhrService {
     return this.prisma.eHR.findMany({
       include: {
         mappings: isWithMappings,
+        _count: {
+          select: {
+            users: true,
+            forms: true,
+          },
+        },
       },
     });
   }
@@ -61,6 +67,12 @@ export class EhrService {
       },
       include: {
         mappings: true,
+        _count: {
+          select: {
+            users: true,
+            forms: true,
+          },
+        },
       },
     });
 
@@ -132,6 +144,12 @@ export class EhrService {
       data: ehrData,
       include: {
         mappings: true,
+        _count: {
+          select: {
+            users: true,
+            forms: true,
+          },
+        },
       },
     });
 
@@ -152,6 +170,12 @@ export class EhrService {
       where: { id },
       include: {
         mappings: true,
+        _count: {
+          select: {
+            users: true,
+            forms: true,
+          },
+        },
       },
     });
   }
