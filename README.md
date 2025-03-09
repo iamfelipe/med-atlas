@@ -163,7 +163,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 When you first access the application, you'll need to create an account:
 
-- Sign up using your Google account or email and password (`http://localhost:3000/sign-up`)
+- Sign up using your Google account or email and password (`http://localhost:3000`)
 - Verify your email address for enhanced security
 - By default, new users are assigned the admin role and redirected to the dashboard
 - Users with the patient role are redirected to their checkup form if they have an EHR assigned
