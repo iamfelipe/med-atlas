@@ -25,7 +25,7 @@ export default async function ClientPage() {
     <>
       <AppHeader
         title={`${user.firstName} ${user.lastName}`}
-        subtitle="Patient check up"
+        subtitle={`${user.email}`}
       />
       <CheckUpForm userId={user.id} ehr={ehr} />
     </>

@@ -12,6 +12,9 @@
     "db:deploy": {
       "cache": false
     },
+    "db:studio": {
+      "cache": false
+    },
     "build": {
       "dependsOn": ["^build", "^db:generate"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
@@ -32,6 +35,12 @@
       "outputs": []
     },
     "test:watch": {
+      "cache": false
+    },
+    "test:cov": {
+      "cache": false
+    },
+    "test:cov:detail": {
       "cache": false
     }
   }
